@@ -8,7 +8,7 @@ const ease = [0.16, 1, 0.3, 1];
 export default function Footer() {
   return (
     <footer
-      className="relative z-10 w-full bg-[#020617] overflow-hidden"
+      className="relative z-10 w-full bg-[#0E1012] overflow-hidden"
       style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
     >
       {/* Ambient glow blobs */}
@@ -136,29 +136,7 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* ── CTA strip ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, delay: 0.2, ease }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border border-white/08 rounded-2xl px-8 py-6 mb-14"
-          style={{ background: "rgba(255,255,255,0.03)" }}
-        >
-          <div>
-            <p className="text-white font-semibold text-base mb-0.5">Ready to grow?</p>
-            <p className="text-white/35 text-sm font-light">Let&apos;s build your visibility from the ground up.</p>
-          </div>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-3 bg-white text-[#020617] text-xs font-bold tracking-wide px-6 py-3 rounded-full hover:bg-white/90 transition-all hover:scale-105 shrink-0"
-          >
-            Start Your Growth
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </motion.div>
+        
 
         {/* ── Bottom bar ── */}
         <div className="h-px bg-white/06 mb-8" />

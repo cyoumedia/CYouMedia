@@ -146,95 +146,138 @@ const MarqueeRow = ({ items, direction = 1, speed = 0.4, className = "" }) => {
 };
 
 /* ─────────────────────────────────────────
-   OPERATE ROW
+   HOW WE OPERATE — 3-card layout, outer white, center dark elevated
 ───────────────────────────────────────── */
-const OperateCard = ({ title, number, imgSrc, reverse }) => (
-  <motion.div
-    initial={{ opacity: 0, x: reverse ? 60 : -60, filter: "blur(8px)" }}
-    whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-    viewport={{ once: true, margin: "-60px" }}
-    transition={{ duration: 1.1, ease: EASE_EXPO }}
-    className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-[#0e0e0e]"
-  >
-    {imgSrc ? (
-      <Image src={imgSrc} alt={title} fill className="object-cover" />
-    ) : (
-      <>
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: "128px" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 35% 40%, rgba(137,207,241,0.08) 0%, transparent 60%)" }} />
-        <span className="absolute inset-0 flex items-center justify-center text-[9rem] sm:text-[11rem] font-bold text-white/[0.04] select-none leading-none font-mono">{number}</span>
-      </>
-    )}
+const OperateCard = ({ item, index }) => {
+  const [hovered, setHovered] = useState(false);
+  const isCenter = index === 1;
+
+  return (
     <motion.div
-      initial={{ x: "-100%" }}
-      whileInView={{ x: "200%" }}
-      viewport={{ once: true }}
-      transition={{ duration: 1.5, delay: 0.35, ease: EASE }}
-      className="absolute inset-y-0 w-1/3 pointer-events-none"
-      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)" }}
-    />
-    <div className="absolute bottom-5 left-5 flex items-center gap-2 z-10">
-      <motion.span
-        animate={{ scale: [1, 1.5, 1] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-        className="w-1.5 h-1.5 rounded-full bg-[#89CFF1]/65"
+      initial={{ opacity: 0, y: isCenter ? 80 : 50, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, y: isCenter ? -32 : 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 1.05, delay: index * 0.12, ease: EASE_EXPO }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      whileHover={{
+        y: isCenter ? -42 : -8,
+        transition: { duration: 0.4, ease: EASE },
+      }}
+      className={`relative flex flex-col rounded-3xl overflow-hidden ${
+        isCenter ? "bg-[#080808]" : "bg-white border border-[#ececec]"
+      }`}
+      style={{
+        boxShadow: isCenter
+          ? "0 40px 90px rgba(0,0,0,0.25), 0 10px 28px rgba(0,0,0,0.15)"
+          : "0 8px 40px rgba(0,0,0,0.055)",
+      }}
+    >
+      {/* Dark card glows */}
+      {isCenter && (
+        <>
+          <div className="absolute top-0 right-0 w-72 h-72 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(137,207,241,0.13) 0%, transparent 65%)" }} />
+          <div className="absolute bottom-0 left-0 w-52 h-52 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(137,207,241,0.07) 0%, transparent 65%)" }} />
+          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        </>
+      )}
+
+      {/* Light card hover glow */}
+      {!isCenter && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{ opacity: hovered ? 1 : 0 }}
+          transition={{ duration: 0.4 }}
+          style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(137,207,241,0.07) 0%, transparent 60%)" }}
+        />
+      )}
+
+      <div className="relative z-10 flex flex-col flex-1 p-8 sm:p-10 gap-8">
+
+        {/* Top: number + label */}
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-2">
+            <span className={`text-[9px] font-bold tracking-[0.28em] uppercase ${isCenter ? "text-[#89CFF1]/55" : "text-[#ccc]"}`}>
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <h3 className={`font-bold tracking-[-0.025em] leading-[1.15] ${isCenter ? "text-white" : "text-[#0a0a0a]"}`} style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)" }}>
+              {item.title}
+            </h3>
+          </div>
+          {/* Pulsing dot */}
+          <motion.span
+            animate={{ scale: [1, 1.6, 1], opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: index * 0.6 }}
+            className={`w-2 h-2 rounded-full mt-1 shrink-0 ${isCenter ? "bg-[#89CFF1]" : "bg-[#0a0a0a]"}`}
+          />
+        </div>
+
+        {/* Image */}
+        {item.imgSrc && (
+          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
+            <Image src={item.imgSrc} alt={item.title} fill className="object-cover" />
+            {isCenter && (
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.5) 0%, transparent 60%)" }} />
+            )}
+            {/* Shimmer */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              whileInView={{ x: "200%" }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, delay: 0.3 + index * 0.15, ease: EASE }}
+              className="absolute inset-y-0 w-1/3 pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)" }}
+            />
+          </div>
+        )}
+
+        {/* Divider */}
+        <div className={`h-px ${isCenter ? "bg-white/[0.08]" : "bg-[#f0f0f0]"}`} />
+
+        {/* Body */}
+        <p className={`text-[14px] font-light leading-[1.82] flex-1 ${isCenter ? "text-white/50" : "text-[#777]"}`}>
+          {item.body}
+        </p>
+
+        {/* Tags */}
+        {item.tags && (
+          <div className="flex flex-wrap gap-2">
+            {item.tags.map((tag, ti) => (
+              <motion.span
+                key={tag}
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.25 + index * 0.1 + ti * 0.07, ease: EASE }}
+                className={`text-[9px] font-semibold tracking-[0.14em] uppercase px-3 py-1.5 rounded-full border ${
+                  isCenter
+                    ? "border-white/10 text-white/35 bg-white/[0.04]"
+                    : "border-[#ececec] text-[#999] bg-[#fafafa]"
+                }`}
+              >
+                {tag}
+              </motion.span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Bottom hover bar */}
+      <motion.div
+        className={`absolute bottom-0 inset-x-0 h-[2px] origin-left ${isCenter ? "bg-[#89CFF1]/50" : "bg-[#0a0a0a]/10"}`}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: hovered ? 1 : 0 }}
+        transition={{ duration: 0.5, ease: EASE }}
       />
-      <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/30">{title}</span>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
-const OperateText = ({ title, body, index, reverse }) => (
-  <motion.div
-    initial={{ opacity: 0, x: reverse ? -60 : 60, filter: "blur(8px)" }}
-    whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-    viewport={{ once: true, margin: "-60px" }}
-    transition={{ duration: 1.1, delay: 0.12, ease: EASE_EXPO }}
-    className="flex flex-col justify-center gap-6"
-  >
-    <motion.span
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: 0.15, ease: EASE }}
-      className="text-[11px] font-bold tracking-[0.28em] uppercase text-[#ccc]"
-    >
-      {String(index + 1).padStart(2, "0")}
-    </motion.span>
-    <motion.h3
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: 0.2, ease: EASE_EXPO }}
-      className="text-[clamp(1.35rem,2vw,1.9rem)] font-bold tracking-[-0.02em] leading-[1.15] text-[#0a0a0a]"
-    >
-      {title}
-    </motion.h3>
-    <motion.p
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
-      className="text-[#777] text-[15px] font-light leading-[1.82] max-w-md"
-    >
-      {body}
-    </motion.p>
-    <motion.div
-      initial={{ scaleX: 0 }}
-      whileInView={{ scaleX: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.9, delay: 0.4, ease: EASE }}
-      className="h-px bg-[#ececec] origin-left max-w-md"
-    />
-  </motion.div>
-);
-
-const OperateRow = ({ number, title, body, imgSrc, reverse = false, index }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-center">
-    {reverse
-      ? <><OperateText title={title} body={body} index={index} reverse={reverse} /><OperateCard title={title} number={number} imgSrc={imgSrc} reverse={reverse} /></>
-      : <><OperateCard title={title} number={number} imgSrc={imgSrc} reverse={reverse} /><OperateText title={title} body={body} index={index} reverse={reverse} /></>
-    }
+const HowWeOperate = ({ items }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-end">
+    {items.map((item, i) => (
+      <OperateCard key={item.title} item={item} index={i} />
+    ))}
   </div>
 );
 
@@ -388,9 +431,9 @@ export default function Home() {
   ];
 
   const operateItems = [
-    { title: "Simplicity Over Complexity", body: "We never hide behind confusing technical language. Everything we do is explained in a way that real people understand — no jargon, no smoke and mirrors.", imgSrc: "/01.png" },
-    { title: "Security Through Structure", body: "All our collaborations rest on solid legal foundations. Our agreements are designed to protect both our partners and ourselves from day one.", imgSrc: "/02new.png" },
-    { title: "Focus on Results", body: "We measure success in real outcomes: Visibility. Growth. Revenue. Not technical reports or vanity metrics that look good in a slide deck.", imgSrc: "/03.png" },
+    { title: "Simplicity Over Complexity", body: "We never hide behind confusing technical language. Everything we do is explained in a way that real people understand — no jargon, no smoke and mirrors.", imgSrc: "/1.png", tags: ["Clear Communication", "No Jargon", "Transparency"] },
+    { title: "Security Through Structure", body: "All our collaborations rest on solid legal foundations. Our agreements are designed to protect both our partners and ourselves from day one.", imgSrc: "/2.png", tags: ["Legal Foundations", "Vetted Agreements", "Protection"] },
+    { title: "Focus on Results", body: "We measure success in real outcomes: Visibility. Growth. Revenue. Not technical reports or vanity metrics that look good in a slide deck.", imgSrc: "/3.png", tags: ["Real Outcomes", "Revenue Growth", "Visibility"] },
   ];
 
   const tickerRowA = ["Strategic Growth", "Digital Visibility", "Global Reach", "Market Entry", "AI-Powered SEO", "Brand Presence", "Legal Foundations", "Elite Partnerships"];
@@ -547,7 +590,7 @@ export default function Home() {
             className="relative rounded-3xl overflow-hidden bg-[#f3f3f3]"
             style={{ minHeight: "380px" }}
           >
-            <Image src="/businessppl.png" alt="Business People" fill className="object-cover object-top" />
+            <Image src="/home02.png" alt="Business People" fill className="object-cover object-top" />
             <div className="absolute bottom-0 inset-x-0 p-6 z-10" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.55) 0%, transparent 100%)" }}>
               <p className="text-white/60 text-[9px] font-bold tracking-[0.22em] uppercase">Our Team</p>
             </div>
@@ -693,55 +736,45 @@ export default function Home() {
       </section>
 
       {/* ══ 5 ▸ HOW WE OPERATE ══ */}
-      <section className="pt-6 pb-28 sm:pb-36 px-5 md:px-10 lg:px-20 max-w-[1440px] mx-auto">
+      <section className="pt-6 pb-28 sm:pb-20 px-5 md:px-10 lg:px-20 max-w-[1440px] mx-auto">
         <div className="border-t border-[#f0f0f0] pt-20 sm:pt-28">
-          <Tag>Our Workflow</Tag>
-          <div className="overflow-hidden mb-18 sm:mb-24">
-            <motion.h2
-              initial={{ y: "100%", opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16 sm:mb-20">
+            <div>
+              <Tag>Our Workflow</Tag>
+              <div className="overflow-hidden">
+                <motion.h2
+                  initial={{ y: "100%", opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, ease: EASE_EXPO }}
+                  className="text-[clamp(1.8rem,3vw,3rem)] font-bold tracking-[-0.028em] leading-tight"
+                >
+                  How We Operate.
+                </motion.h2>
+              </div>
+            </div>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, ease: EASE_EXPO }}
-              /* ↓ was clamp(2.4rem,4.5vw,4.2rem) */
-              className="text-[clamp(1.8rem,3vw,3rem)] font-bold tracking-[-0.028em] leading-tight"
+              transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+              className="text-[#999] text-[13px] font-light max-w-xs sm:text-right sm:pb-1 leading-relaxed"
             >
-              How We Operate.
-            </motion.h2>
-          </div>
-          <div className="flex flex-col gap-20 sm:gap-28 md:gap-36">
-            {operateItems.map((item, i) => (
-              <OperateRow
-                key={item.title}
-                index={i}
-                number={String(i + 1).padStart(2, "0")}
-                title={item.title}
-                body={item.body}
-                imgSrc={item.imgSrc}
-                reverse={i % 2 === 1}
-              />
-            ))}
+              Three principles.<br />Zero compromise.
+            </motion.p>
           </div>
 
+          {/* 3-card layout */}
           <motion.div
             initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 1, ease: EASE_EXPO }}
-            className="mt-20 sm:mt-28 rounded-3xl bg-[#f7f7f7] p-8 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8"
           >
-            <div>
-              <p className="text-[9px] font-bold tracking-[0.26em] uppercase text-[#ccc] mb-3">Elite network</p>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold tracking-[-0.022em] max-w-xl leading-tight">
-                Professionals connected to Spotify, Swish, and the world's leading markets.
-              </p>
-            </div>
-            <Magnetic>
-              <Link href="/contact" className="shrink-0 inline-flex items-center gap-2 bg-[#0a0a0a] text-white text-[12px] font-bold px-6 sm:px-8 py-3.5 rounded-full hover:bg-[#222] active:scale-95 transition-all duration-200 whitespace-nowrap">
-                Work With Us
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </Link>
-            </Magnetic>
+            <HowWeOperate items={operateItems} />
           </motion.div>
+
+          
         </div>
       </section>
 
