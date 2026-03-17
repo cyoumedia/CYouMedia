@@ -94,7 +94,7 @@ export default function Contact() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 55%, rgba(137,207,241,0.08) 0%, transparent 65%)" }} />
         {/* Parallax bg */}
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 z-0">
-          <Image src="/bg.png" alt="Contact" fill className="object-cover opacity-[0.18]" priority />
+          <Image src="/bg.png" alt="Contact" fill className="object-cover opacity-[0.18] grayscale" priority />
         </motion.div>
         {/* Rounded white reveal */}
         <div className="absolute bottom-0 inset-x-0 h-16 z-10 bg-white" style={{ borderRadius: "40px 40px 0 0" }} />

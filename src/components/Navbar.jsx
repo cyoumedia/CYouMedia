@@ -1,135 +1,307 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
 
-export default function FloatingNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
+const EASE      = [0.16, 1, 0.3, 1];
+const EASE_EXPO = [0.87, 0, 0.13, 1];
 
-  const navLinks = ["Services", "About", "Careers"];
+const NAV_LINKS = [
+  { label: "Services", href: "/services" },
+  { label: "About",    href: "/about"    },
+  { label: "Careers",  href: "/careers"  },
+];
 
-  const pillStyle =
-    "bg-white backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]";
-
-  const textMain = "text-[#020617]";
-  const textMuted = "text-[#020617]/50 hover:text-[#89cff1]";
-  const borderDivider = "border-[#020617]/10";
-
-  const menuBtnStyle =
-    "text-[#020617] bg-white/80 backdrop-blur-md border border-white shadow-sm hover:bg-white";
-
+/* Magnetic wrapper */
+const Mag = ({ children }) => {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 220, damping: 22 });
+  const sy = useSpring(y, { stiffness: 220, damping: 22 });
   return (
     <motion.div
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-6 left-0 w-full px-4 md:px-8 z-[100] flex justify-between items-start pointer-events-none"
+      ref={ref}
+      style={{ x: sx, y: sy }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        x.set((e.clientX - (r.left + r.width / 2)) * 0.3);
+        y.set((e.clientY - (r.top  + r.height / 2)) * 0.3);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
     >
-      {/* ================= LEFT PILL ================= */}
-      <div
-        className={`pointer-events-auto flex items-center py-3.5 px-7 rounded-full gap-6 ${pillStyle}`}
+      {children}
+    </motion.div>
+  );
+};
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen]         = useState(false);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 64);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  useEffect(() => {
+    if (window.innerWidth >= 768) setOpen(false);
+    const fn = () => { if (window.innerWidth >= 768) setOpen(false); };
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+
+  return (
+    <>
+      <motion.header
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: EASE_EXPO }}
+        className="fixed top-0 inset-x-0 z-[100] flex items-center justify-between"
+        style={{ pointerEvents: "none" }}
       >
-        {/* Logo */}
-        <Link
-          href="/"
-          className={`text-sm lg:text-base font-extrabold tracking-tighter flex items-center gap-1 ${textMain}`}
+        {/* ── Single morphing bar ── */}
+        <motion.div
+          className="w-full mx-auto flex items-center justify-between"
+          animate={scrolled ? {
+            /* condensed pill — light frosted */
+            maxWidth:         720,
+            marginTop:        12,
+            marginLeft:       "auto",
+            marginRight:      "auto",
+            borderRadius:     14,
+            paddingLeft:      28,
+            paddingRight:     28,
+            height:           52,
+            backgroundColor:  "rgba(255,255,255,0.92)",
+            borderWidth:      1,
+            borderColor:      "rgba(0,0,0,0.07)",
+            boxShadow:        "0 4px 28px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.8) inset",
+          } : {
+            /* full-width transparent on dark hero */
+            maxWidth:         1440,
+            marginTop:        0,
+            marginLeft:       "auto",
+            marginRight:      "auto",
+            borderRadius:     0,
+            paddingLeft:      80,
+            paddingRight:     80,
+            height:           64,
+            backgroundColor:  "rgba(0,0,0,0)",
+            borderWidth:      0,
+            borderColor:      "transparent",
+            boxShadow:        "none",
+          }}
+          transition={{ duration: 0.5, ease: EASE_EXPO }}
+          style={{
+            pointerEvents:        "auto",
+            backdropFilter:       scrolled ? "blur(20px)" : "none",
+            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+            border:               "1px solid transparent",
+          }}
         >
-          <span>
-            <span className="text-[#89cff1]">CYou</span>
-            Media<span className="text-[#89cff1]">.</span>
-          </span>
-        </Link>
+          {/* Hero bottom hairline — only when not scrolled */}
+          {!scrolled && (
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.4, delay: 0.6, ease: EASE }}
+              className="absolute bottom-0 inset-x-0 h-px origin-left pointer-events-none"
+              style={{ background: "rgba(255,255,255,0.08)" }}
+            />
+          )}
 
-        {/* Desktop Links */}
-        <div
-          className={`hidden md:flex items-center space-x-6 border-l pl-6 ${borderDivider}`}
-        >
-          {navLinks.map((item) => (
-            <Link
-              key={item}
-              href={`/${item.toLowerCase()}`}
-              className={`text-[10px] lg:text-xs font-bold uppercase tracking-[0.15em] transition-colors duration-300 ${textMuted}`}
+          {/* Logo */}
+          <Link href="/" className="relative z-10 shrink-0">
+            <span
+              className="font-bold tracking-[-0.04em] leading-none transition-colors duration-300"
+              style={{
+                fontSize: "clamp(0.9rem,1.3vw,1.05rem)",
+                color: scrolled ? "#0a0a0a" : "#ffffff",
+              }}
             >
-              {item}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* ================= RIGHT PILL ================= */}
-      <div className="pointer-events-auto relative flex flex-col items-end">
-        <div className="flex items-center gap-3">
-          {/* CTA */}
-          <Link
-            href="/contact"
-            className="hidden sm:block text-[10px] lg:text-xs font-black uppercase tracking-widest px-8 py-3.5 rounded-full bg-[#89cff1] text-[#020617] hover:bg-[#a6e0f7] transition-all shadow-[0_4px_20px_rgba(137,207,241,0.2)] hover:shadow-[0_6px_25px_rgba(137,207,241,0.4)] hover:-translate-y-0.5"
-          >
-            Get in Touch
+              CYou<span style={{ color: "#89CFF1" }}>Media</span><span style={{ color: "#89CFF1" }}>.</span>
+            </span>
           </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className={`md:hidden p-3.5 focus:outline-none rounded-full ${menuBtnStyle}`}
-            aria-label="Toggle menu"
-          >
-            <div className="space-y-1.5 flex flex-col items-end">
-              <span
-                className={`block h-0.5 bg-current transition-transform origin-right ${
-                  isOpen ? "w-5 -rotate-45 -translate-y-[1px]" : "w-5"
-                }`}
-              />
-              <span
-                className={`block h-0.5 bg-current transition-opacity ${
-                  isOpen ? "w-4 opacity-0" : "w-4"
-                }`}
-              />
-              <span
-                className={`block h-0.5 bg-current transition-transform origin-right ${
-                  isOpen ? "w-5 rotate-45 translate-y-[1px]" : "w-5"
-                }`}
-              />
-            </div>
-          </button>
-        </div>
-
-        {/* ================= MOBILE MENU ================= */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 10 }}
-              exit={{ opacity: 0, scale: 0.95, y: -10 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute top-full right-0 mt-3 w-64 p-6 rounded-[2rem] bg-white/95 backdrop-blur-3xl border border-white shadow-2xl z-[101] md:hidden"
-            >
-              <div className="flex flex-col gap-5 text-right">
-                {navLinks.map((item) => (
-                  <Link
-                    key={item}
-                    href={`/${item.toLowerCase()}`}
-                    onClick={() => setIsOpen(false)}
-                    className="text-xl font-bold text-[#020617] hover:text-[#89cff1] transition-colors"
-                  >
-                    {item}
-                  </Link>
-                ))}
-
-                <hr className={`my-2 ${borderDivider}`} />
-
+          {/* Desktop links — dot separators */}
+          <nav className="hidden md:flex items-center relative z-10">
+            {NAV_LINKS.map((link, i) => (
+              <div key={link.label} className="flex items-center">
+                {i > 0 && (
+                  <div
+                    className="w-px h-3 mx-1 transition-colors duration-300"
+                    style={{ background: scrolled ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.15)" }}
+                  />
+                )}
                 <Link
-                  href="/contact"
-                  onClick={() => setIsOpen(false)}
-                  className="font-bold text-sm uppercase tracking-widest text-[#89cff1]"
+                  href={link.href}
+                  className="relative text-[10px] font-bold tracking-[0.22em] uppercase px-4 py-1.5 rounded-lg transition-all duration-200 group"
+                  style={{ color: scrolled ? "rgba(10,10,10,0.55)" : "rgba(255,255,255,0.85)" }}
+                  onMouseEnter={e => e.currentTarget.style.color = scrolled ? "#0a0a0a" : "#ffffff"}
+                  onMouseLeave={e => e.currentTarget.style.color = scrolled ? "rgba(10,10,10,0.45)" : "rgba(255,255,255,0.6)"}
                 >
-                  Start a project →
+                  {link.label}
+                  {/* Accent underline sweep on hover */}
+                  <span
+                    className="absolute bottom-0 left-4 right-4 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                    style={{ background: "#89CFF1", opacity: 0.6 }}
+                  />
                 </Link>
               </div>
+            ))}
+          </nav>
+
+          {/* Right: CTA + hamburger */}
+          <div className="flex items-center gap-3 relative z-10 shrink-0">
+
+            {/* "Available" pulse — hero only, desktop */}
+            {!scrolled && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="hidden lg:flex items-center gap-2"
+              >
+                
+              </motion.div>
+            )}
+
+            {/* CTA button */}
+            <Mag>
+              <Link
+                href="/contact"
+                className="hidden sm:inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] uppercase px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-95"
+                style={scrolled ? {
+                  background: "#0a0a0a",
+                  color:      "#ffffff",
+                  border:     "1px solid transparent",
+                } : {
+                  background: "rgba(255,255,255,0.1)",
+                  color:      "rgba(255,255,255,0.85)",
+                  border:     "1px solid rgba(255,255,255,0.18)",
+                  backdropFilter: "blur(8px)",
+                }}
+                onMouseEnter={e => {
+                  if (scrolled) { e.currentTarget.style.background = "#222"; }
+                  else          { e.currentTarget.style.background = "rgba(255,255,255,0.18)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.32)"; }
+                }}
+                onMouseLeave={e => {
+                  if (scrolled) { e.currentTarget.style.background = "#0a0a0a"; }
+                  else          { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)"; }
+                }}
+              >
+                Get in Touch
+              </Link>
+            </Mag>
+
+            {/* Hamburger */}
+            <button
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+              className="md:hidden flex flex-col justify-center items-end gap-[5px] w-8 h-8 focus:outline-none"
+            >
+              <motion.span
+                animate={open ? { rotate: -45, y: 5 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.3, ease: EASE }}
+                className="block h-[1.5px] w-5 rounded-full transition-colors duration-300"
+                style={{ background: scrolled ? "#0a0a0a" : "#ffffff" }}
+              />
+              <motion.span
+                animate={open ? { opacity: 0 } : { opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                className="block h-[1.5px] w-3.5 rounded-full transition-colors duration-300"
+                style={{ background: scrolled ? "#0a0a0a" : "#ffffff" }}
+              />
+              <motion.span
+                animate={open ? { rotate: 45, y: -5 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.3, ease: EASE }}
+                className="block h-[1.5px] w-5 rounded-full transition-colors duration-300"
+                style={{ background: scrolled ? "#0a0a0a" : "#ffffff" }}
+              />
+            </button>
+          </div>
+        </motion.div>
+      </motion.header>
+
+      {/* ── Mobile menu ── */}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div
+              key="bd"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 z-[98]"
+              style={{ background: "rgba(0,0,0,0.25)" }}
+            />
+            <motion.div
+              key="panel"
+              initial={{ opacity: 0, y: -12, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0,  filter: "blur(0px)" }}
+              exit={  { opacity: 0, y: -12, filter: "blur(8px)" }}
+              transition={{ duration: 0.35, ease: EASE_EXPO }}
+              className="fixed top-[76px] left-4 right-4 z-[99] rounded-2xl overflow-hidden md:hidden"
+              style={{
+                background:           "rgba(255,255,255,0.97)",
+                backdropFilter:       "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
+                border:               "1px solid rgba(0,0,0,0.07)",
+                boxShadow:            "0 20px 60px rgba(0,0,0,0.12)",
+              }}
+            >
+              <div className="p-6 flex flex-col gap-1">
+                {NAV_LINKS.map((link, i) => (
+                  <motion.div
+                    key={link.label}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.06, ease: EASE }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between py-3.5 group"
+                      style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}
+                    >
+                      <span
+                        className="text-[13px] font-bold tracking-[0.1em] uppercase transition-colors duration-200 text-[#0a0a0a]/50 group-hover:text-[#0a0a0a]"
+                      >
+                        {link.label}
+                      </span>
+                      <svg className="w-3 h-3 text-[#ccc] group-hover:text-[#89CFF1] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                  </motion.div>
+                ))}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.22, ease: EASE }}
+                  className="pt-4"
+                >
+                  <Link
+                    href="/contact"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full bg-[#0a0a0a] text-white text-[11px] font-bold tracking-[0.18em] uppercase py-3.5 rounded-xl transition-all active:scale-95 hover:bg-[#222]"
+                  >
+                    Get in Touch
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                </motion.div>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

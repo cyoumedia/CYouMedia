@@ -360,7 +360,7 @@ export default function ServicesPage() {
 
         {/* Parallax bg */}
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 z-0">
-          <Image src="/bg.png" alt="Services" fill className="object-cover opacity-20" priority />
+          <Image src="/bg.png" alt="Services" fill className="object-cover opacity-20 grayscale" priority />
         </motion.div>
 
         {/* Rounded white reveal at bottom — matching screenshot */}
