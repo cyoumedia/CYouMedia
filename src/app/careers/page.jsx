@@ -202,7 +202,7 @@ export default function CareersList() {
             transition={{ duration: 1.1, ease: EASE_EXPO }}
             className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#f5f5f5]"
           >
-            <Image src="/careerspic.png" alt="Life at CYouMedia" fill className="object-cover" />
+            <Image src="/cnew.png" alt="Life at CYouMedia" fill className="object-cover" />
             <motion.div
               initial={{ x: "-100%" }}
               whileInView={{ x: "200%" }}
