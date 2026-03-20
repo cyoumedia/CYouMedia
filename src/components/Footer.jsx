@@ -48,23 +48,17 @@ export default function Footer() {
             </p>
 
             {/* Tagline pill */}
-            <div className="inline-flex items-center gap-2 self-start border border-white/20 rounded-full px-4 py-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#89CFF1] animate-pulse" />
-              <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-white/60">
-                Syns du, finns du.
-              </span>
-            </div>
+            
 
             {/* Presence dots — 6 hubs */}
             <div className="flex flex-col gap-2 mt-2">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-3">
                 Global Presence
               </p>
               <div className="flex flex-wrap gap-2">
                 {[
                   "Sweden",
                   "London",
-                  "South Africa",
                   "USA",
                   "Singapore",
                   "Sri Lanka",
@@ -90,7 +84,7 @@ export default function Footer() {
           >
             {/* Services */}
             <div className="flex flex-col gap-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+              <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/60 mb-1">
                 Services
               </p>
               {[
@@ -110,7 +104,7 @@ export default function Footer() {
 
             {/* Company */}
             <div className="flex flex-col gap-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+              <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/60 mb-1">
                 Company
               </p>
               {[
@@ -131,13 +125,13 @@ export default function Footer() {
 
             {/* Connect */}
             <div className="flex flex-col gap-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+              <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/60 mb-1">
                 Connect
               </p>
 
               <div className="flex items-center gap-4">
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/company/cyoumedia/"
                   className="text-white/70 hover:text-white transition-colors duration-200"
                 >
                   <Linkedin size={18} />

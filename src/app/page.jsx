@@ -458,7 +458,7 @@ export default function Home() {
               initial={{ y: "110%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1, ease: EASE_EXPO }}
-              className="text-white/55 text-[9px] sm:text-[10px] font-bold tracking-[0.38em] uppercase"
+              className="text-white/70 text-[9px] sm:text-[10px] font-bold tracking-[0.38em] uppercase"
             >
               Strategic Growth &amp; Digital Visibility
             </motion.p>
@@ -480,7 +480,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.34, ease: EASE }}
-            className="text-white/55 text-[15px] sm:text-base md:text-lg font-light max-w-md mx-auto mb-10 sm:mb-14 leading-relaxed px-2"
+            className="text-white/70 text-[15px] sm:text-base md:text-lg font-light max-w-md mx-auto mb-10 sm:mb-14 leading-relaxed px-2"
           >
             We help businesses become visible, connect globally, and grow through strategic expansion and digital presence.
           </motion.p>
@@ -607,7 +607,7 @@ export default function Home() {
             >
               <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
               <div className="absolute top-0 right-0 w-36 h-36 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(137,207,241,0.15) 0%, transparent 70%)" }} />
-              <p className="text-[9px] font-bold tracking-[0.24em] uppercase text-white/20 mb-5 relative z-10">At a glance</p>
+              <p className="text-[9px] font-bold tracking-[0.24em] uppercase text-white/50 mb-5 relative z-10">At a glance</p>
               <div className="flex flex-col gap-0 relative z-10 mt-auto">
                 {[{ n: "6+", l: "Global Hubs" }, { n: "10M+", l: "Growth Target" }, { n: "100%", l: "Results Driven" }].map(({ n, l }, i) => (
                   <motion.div
@@ -618,7 +618,7 @@ export default function Home() {
                     transition={{ duration: 0.5, delay: 0.3 + i * 0.12, ease: EASE }}
                     className="flex items-center justify-between py-3.5 border-t border-white/[0.07] first:border-0"
                   >
-                    <span className="text-[9px] font-semibold tracking-[0.16em] uppercase text-white/28">{l}</span>
+                    <span className="text-[9px] font-semibold tracking-[0.16em] uppercase text-white/40">{l}</span>
                     <span className="text-[1.45rem] font-bold text-white tracking-tight tabular-nums">{n}</span>
                   </motion.div>
                 ))}
@@ -635,7 +635,7 @@ export default function Home() {
             >
               <span className="text-[2rem] text-[#ddd] leading-none select-none font-serif">"</span>
               <p className="text-[14px] font-semibold text-[#0a0a0a] leading-[1.58] tracking-[-0.01em]">
-                If you exist —<br />you are seen.
+              Syns du, finns du.<br />If you exist you are seen.
               </p>
               <p className="text-[9px] font-bold tracking-[0.24em] uppercase text-[#bbb] mt-2">CYouMedia Principle</p>
             </motion.div>
@@ -862,16 +862,6 @@ export default function Home() {
           />
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: EASE }}
-            className="text-[9px] font-bold tracking-[0.34em] uppercase text-white/18 mb-5 relative z-10"
-          >
-            CYouMedia
-          </motion.p>
-
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -879,12 +869,10 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.12, ease: EASE_EXPO }}
             className="relative z-10 inline-flex items-center gap-4 mb-4"
           >
-            <motion.span animate={{ scaleX: [0.6, 1, 0.6] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} className="w-6 h-px bg-[#89CFF1]/30 hidden sm:block" />
             {/* ↓ was clamp(1.5rem,3.2vw,2.9rem) */}
             <h2 className="text-[clamp(1.15rem,2.2vw,2rem)] font-bold tracking-[-0.018em]" style={{ color: "#fff", textShadow: "0 0 50px rgba(137,207,241,0.32)" }}>
               CYouMedia IS THE ONLY OPTION
             </h2>
-            <motion.span animate={{ scaleX: [0.6, 1, 0.6] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }} className="w-6 h-px bg-[#89CFF1]/30 hidden sm:block" />
           </motion.div>
 
           <motion.p
@@ -892,9 +880,9 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.28, ease: EASE }}
-            className="relative z-10 text-white/30 text-[12px] font-light tracking-[0.06em] mb-9"
+            className="relative z-10 text-white/30 text-[12px] font-light tracking-[0.06em] mb-9 uppercase"
           >
-            Finns du — finns du. Syns du inte — finns du inte.
+            Syns du, finns du.
           </motion.p>
 
           <motion.div
