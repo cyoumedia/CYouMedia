@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Linkedin, Facebook, Twitter, Instagram } from "lucide-react";
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -25,10 +26,8 @@ export default function Footer() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 lg:px-24 pt-20 pb-10">
-
         {/* ── Main grid ── */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-16 mb-20">
-
           {/* Left — brand block */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -43,26 +42,36 @@ export default function Footer() {
             >
               CYouMedia.
             </Link>
-            <p className="text-white/35 text-sm font-light leading-relaxed">
-              Strategic growth &amp; digital visibility, worldwide. If you exist — you are seen.
+            <p className="text-white/50 text-sm font-light leading-relaxed">
+              Strategic growth &amp; digital visibility, worldwide. If you exist
+              — you are seen.
             </p>
 
             {/* Tagline pill */}
-            <div className="inline-flex items-center gap-2 self-start border border-white/10 rounded-full px-4 py-2">
+            <div className="inline-flex items-center gap-2 self-start border border-white/20 rounded-full px-4 py-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#89CFF1] animate-pulse" />
-              <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-white/30">
+              <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-white/60">
                 Syns du, finns du.
               </span>
             </div>
 
             {/* Presence dots — 6 hubs */}
             <div className="flex flex-col gap-2 mt-2">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/20 mb-1">Global Presence</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+                Global Presence
+              </p>
               <div className="flex flex-wrap gap-2">
-                {["Sweden", "London", "South Africa", "USA", "Singapore", "Sri Lanka"].map((loc) => (
+                {[
+                  "Sweden",
+                  "London",
+                  "South Africa",
+                  "USA",
+                  "Singapore",
+                  "Sri Lanka",
+                ].map((loc) => (
                   <span
                     key={loc}
-                    className="text-[10px] text-white/30 border border-white/08 rounded-full px-3 py-1 font-light"
+                    className="text-[10px] text-white/50 border border-white/08 rounded-full px-3 py-1 font-light"
                   >
                     {loc}
                   </span>
@@ -81,16 +90,18 @@ export default function Footer() {
           >
             {/* Services */}
             <div className="flex flex-col gap-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/25 mb-1">Services</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+                Services
+              </p>
               {[
                 ["Strategic Expansion", "/services/strategic-expansion"],
-                ["Digital Presence",    "/services/digital-presence"   ],
-                ["Proprietary AI",      "/services/proprietary-ai"     ],
+                ["Digital Presence", "/services/digital-presence"],
+                ["Proprietary AI", "/services/proprietary-ai"],
               ].map(([label, href]) => (
                 <Link
                   key={label}
                   href={href}
-                  className="text-sm text-white/40 hover:text-white font-light transition-colors duration-200"
+                  className="text-sm text-white/70 hover:text-white font-light transition-colors duration-200"
                 >
                   {label}
                 </Link>
@@ -99,17 +110,19 @@ export default function Footer() {
 
             {/* Company */}
             <div className="flex flex-col gap-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/25 mb-1">Company</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+                Company
+              </p>
               {[
-                ["Who We Are",   "/about"       ],
+                ["Who We Are", "/about"],
                 ["Global Reach", "/global-reach"],
-                ["Careers",      "/careers"     ],
-                ["Contact",      "/contact"     ],
+                ["Careers", "/careers"],
+                ["Contact", "/contact"],
               ].map(([label, href]) => (
                 <Link
                   key={label}
                   href={href}
-                  className="text-sm text-white/40 hover:text-white font-light transition-colors duration-200"
+                  className="text-sm text-white/70 hover:text-white font-light transition-colors duration-200"
                 >
                   {label}
                 </Link>
@@ -118,37 +131,46 @@ export default function Footer() {
 
             {/* Connect */}
             <div className="flex flex-col gap-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/25 mb-1">Connect</p>
-              {[
-                ["LinkedIn",      "#"],
-                ["Twitter / X",   "#"],
-                ["Client Portal", "#"],
-              ].map(([label, href]) => (
+              <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1">
+                Connect
+              </p>
+
+              <div className="flex items-center gap-4">
                 <a
-                  key={label}
-                  href={href}
-                  className="text-sm text-white/40 hover:text-white font-light transition-colors duration-200"
+                  href="#"
+                  className="text-white/70 hover:text-white transition-colors duration-200"
                 >
-                  {label}
+                  <Linkedin size={18} />
                 </a>
-              ))}
+
+                <a
+                  href="#"
+                  className="text-white/70 hover:text-white transition-colors duration-200"
+                >
+                  <Instagram size={18} /> {/* X (Twitter) */}
+                </a>
+
+                <a
+                  href="#"
+                  className="text-white/60 hover:text-white transition-colors duration-200"
+                >
+                  <Facebook size={18} />
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>
 
-        
-
         {/* ── Bottom bar ── */}
         <div className="h-px bg-white/06 mb-8" />
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/20">
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/30">
             © {new Date().getFullYear()} CYouMedia · All Rights Reserved
           </p>
-          <p className="text-[10px] italic font-light text-white/20">
+          <p className="text-[10px] italic font-light text-white/30">
             Business is not about complexity — it&apos;s about results.
           </p>
         </div>
-
       </div>
     </footer>
   );

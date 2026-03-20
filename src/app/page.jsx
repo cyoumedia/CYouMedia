@@ -444,7 +444,7 @@ export default function Home() {
 
       {/* ══ 1 ▸ HERO ══ */}
       <section ref={heroRef} className="relative w-full h-screen min-h-[640px] overflow-hidden flex items-center justify-center bg-black">
-        <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 z-0">
+        <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-x-0 top-16 bottom-0 z-0">
           <video autoPlay loop muted playsInline className="w-full h-full object-cover">
             <source src="/bg01.mp4" type="video/mp4" />
           </video>
