@@ -1,0 +1,900 @@
+"use client";
+
+import { useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValue,
+  useVelocity,
+  useAnimationFrame,
+} from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+
+/* ─────────────────────────────────────────
+   EASING CURVES
+───────────────────────────────────────── */
+const EASE = [0.16, 1, 0.3, 1];
+const EASE_EXPO = [0.87, 0, 0.13, 1];
+const EASE_OUT = [0.0, 0.0, 0.2, 1];
+
+/* ─────────────────────────────────────────
+   MAGNETIC WRAPPER
+───────────────────────────────────────── */
+const Magnetic = ({ children, strength = 0.3 }) => {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 180, damping: 22 });
+  const sy = useSpring(y, { stiffness: 180, damping: 22 });
+  const onMove = (e) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    x.set((e.clientX - (r.left + r.width / 2)) * strength);
+    y.set((e.clientY - (r.top + r.height / 2)) * strength);
+  };
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={() => {
+        x.set(0);
+        y.set(0);
+      }}
+      style={{ x: sx, y: sy }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+/* ─────────────────────────────────────────
+   TAG
+───────────────────────────────────────── */
+const Tag = ({ children, light = false }) => (
+  <motion.span
+    initial={{ opacity: 0, x: -20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 1, ease: EASE }}
+    className={`inline-flex items-center gap-4 text-[8.5px] font-semibold tracking-[0.38em] uppercase mb-7 ${light ? "text-white/30" : "text-[#aaa]"}`}
+  >
+    <motion.span
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, ease: EASE }}
+      className={`block w-6 h-px origin-left ${light ? "bg-white/20" : "bg-[#ddd]"}`}
+    />
+    {children}
+  </motion.span>
+);
+
+/* ─────────────────────────────────────────
+   PARTICLES — SSR-safe deterministic
+───────────────────────────────────────── */
+const PTS = [
+  { id: 0, s: 1.6, x: 11, y: 17, d: 15, dl: 0 },
+  { id: 1, s: 2.2, x: 27, y: 71, d: 11, dl: 1.3 },
+  { id: 2, s: 1.4, x: 44, y: 34, d: 17, dl: 2.5 },
+  { id: 3, s: 2.0, x: 60, y: 54, d: 13, dl: 0.9 },
+  { id: 4, s: 1.2, x: 77, y: 21, d: 19, dl: 3.2 },
+  { id: 5, s: 2.5, x: 89, y: 79, d: 10, dl: 1.6 },
+  { id: 6, s: 1.6, x: 6, y: 87, d: 16, dl: 4.1 },
+  { id: 7, s: 2.1, x: 52, y: 11, d: 12, dl: 2.1 },
+  { id: 8, s: 1.3, x: 35, y: 94, d: 18, dl: 0.4 },
+  { id: 9, s: 2.7, x: 71, y: 47, d: 9, dl: 5.3 },
+  { id: 10, s: 1.5, x: 18, y: 59, d: 14, dl: 1.9 },
+  { id: 11, s: 1.9, x: 83, y: 32, d: 16, dl: 3.7 },
+  { id: 12, s: 1.1, x: 41, y: 75, d: 11, dl: 1.0 },
+  { id: 13, s: 2.4, x: 65, y: 7, d: 13, dl: 2.8 },
+  { id: 14, s: 1.8, x: 94, y: 64, d: 15, dl: 4.5 },
+  { id: 15, s: 2.2, x: 2, y: 41, d: 12, dl: 1.2 },
+  { id: 16, s: 1.0, x: 56, y: 89, d: 19, dl: 4.0 },
+  { id: 17, s: 2.6, x: 79, y: 14, d: 10, dl: 0.6 },
+];
+
+const Particles = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[2]">
+    {PTS.map((p) => (
+      <motion.div
+        key={p.id}
+        className="absolute rounded-full bg-white/20"
+        style={{ width: p.s, height: p.s, left: `${p.x}%`, top: `${p.y}%` }}
+        animate={{
+          y: [0, -42, 0],
+          opacity: [0, 0.5, 0],
+          scale: [0.8, 1.6, 0.8],
+        }}
+        transition={{
+          duration: p.d,
+          delay: p.dl,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    ))}
+  </div>
+);
+
+/* ─────────────────────────────────────────
+   MARQUEE
+───────────────────────────────────────── */
+const wrap = (min, max, v) => {
+  const r = max - min;
+  return ((((v - min) % r) + r) % r) + min;
+};
+
+const MarqueeRow = ({ items, direction = 1, speed = 0.3, className = "" }) => {
+  const baseX = useMotionValue(0);
+  const { scrollY } = useScroll();
+  const vel = useVelocity(scrollY);
+  const smooth = useSpring(vel, { stiffness: 50, damping: 30 });
+  const vFac = useTransform(smooth, [0, 1000], [0, 5], { clamp: false });
+  const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`);
+  const dir = useRef(direction);
+  useAnimationFrame((_, delta) => {
+    let m = dir.current * speed * (delta / 1000) * 10;
+    dir.current = vFac.get() < 0 ? -direction : direction;
+    m += dir.current * m * vFac.get();
+    baseX.set(baseX.get() + m);
+  });
+  const rep = [...items, ...items, ...items, ...items];
+  return (
+    <div className={`overflow-hidden ${className}`}>
+      <motion.div style={{ x }} className="flex items-center whitespace-nowrap">
+        {rep.map((item, i) => (
+          <span key={i} className="flex items-center gap-5 mx-7">
+            <span className="font-semibold tracking-[0.18em] uppercase">
+              {item}
+            </span>
+            <span
+              className="w-1 h-1 rounded-full opacity-25 shrink-0 inline-block"
+              style={{ background: "currentColor" }}
+            />
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────
+   OPERATE CARD
+───────────────────────────────────────── */
+const OperateCard = ({ item, index }) => {
+  const [hov, setHov] = useState(false);
+  const mid = index === 1;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: mid ? 90 : 55, filter: "blur(12px)" }}
+      whileInView={{ opacity: 1, y: mid ? -36 : 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 1.1, delay: index * 0.13, ease: EASE_EXPO }}
+      onHoverStart={() => setHov(true)}
+      onHoverEnd={() => setHov(false)}
+      whileHover={{
+        y: mid ? -46 : -10,
+        transition: { duration: 0.45, ease: EASE },
+      }}
+      className={`relative flex flex-col rounded-[28px] overflow-hidden ${mid ? "bg-[#080808]" : "bg-white border border-[#eaeaea]"}`}
+      style={{
+        boxShadow: mid
+          ? "0 50px 100px rgba(0,0,0,0.3), 0 12px 30px rgba(0,0,0,0.18)"
+          : "0 6px 36px rgba(0,0,0,0.05)",
+      }}
+    >
+      {mid && (
+        <>
+          <div
+            className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(137,207,241,0.11) 0%, transparent 65%)",
+            }}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-56 h-56 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(137,207,241,0.06) 0%, transparent 65%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.022] pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+              backgroundSize: "36px 36px",
+            }}
+          />
+        </>
+      )}
+      {!mid && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none rounded-[28px]"
+          animate={{ opacity: hov ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% -10%, rgba(137,207,241,0.06) 0%, transparent 65%)",
+          }}
+        />
+      )}
+
+      <div className="relative z-10 flex flex-col flex-1 p-9 sm:p-10 gap-7">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-2">
+            <span
+              className={`text-[8px] font-bold tracking-[0.3em] uppercase ${mid ? "text-[#89CFF1]/45" : "text-[#ccc]"}`}
+            >
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <h3
+              className={`font-bold tracking-[-0.03em] leading-[1.12] ${mid ? "text-white" : "text-[#0a0a0a]"}`}
+              style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.35rem)" }}
+            >
+              {item.title}
+            </h3>
+          </div>
+          <motion.span
+            animate={{ scale: [1, 1.7, 1], opacity: [0.3, 0.9, 0.3] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: index * 0.7,
+            }}
+            className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${mid ? "bg-[#89CFF1]" : "bg-[#0a0a0a]/30"}`}
+          />
+        </div>
+
+        {item.imgSrc && (
+          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
+            <Image
+              src={item.imgSrc}
+              alt={item.title}
+              fill
+              className="object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background: mid
+                  ? "linear-gradient(to top, rgba(8,8,8,0.55) 0%, transparent 55%)"
+                  : "linear-gradient(to top, rgba(0,0,0,0.08) 0%, transparent 60%)",
+              }}
+            />
+            <motion.div
+              initial={{ x: "-100%" }}
+              whileInView={{ x: "220%" }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 1.8,
+                delay: 0.4 + index * 0.18,
+                ease: EASE,
+              }}
+              className="absolute inset-y-0 w-1/3 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
+              }}
+            />
+          </div>
+        )}
+
+        <div className={`h-px ${mid ? "bg-white/[0.07]" : "bg-[#f2f2f2]"}`} />
+
+        <p
+          className={`text-[13.5px] font-light leading-[1.88] flex-1 ${mid ? "text-white/45" : "text-[#777]"}`}
+        >
+          {item.body}
+        </p>
+
+        {item.tags && (
+          <div className="flex flex-wrap gap-2">
+            {item.tags.map((tag, ti) => (
+              <motion.span
+                key={tag}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.45,
+                  delay: 0.2 + index * 0.1 + ti * 0.07,
+                  ease: EASE,
+                }}
+                className={`text-[8px] font-semibold tracking-[0.16em] uppercase px-3 py-1.5 rounded-full border ${
+                  mid
+                    ? "border-white/[0.09] text-white/30 bg-white/[0.035]"
+                    : "border-[#ebebeb] text-[#aaa] bg-[#fafafa]"
+                }`}
+              >
+                {tag}
+              </motion.span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <motion.div
+        className={`absolute bottom-0 inset-x-0 h-[1.5px] origin-left ${mid ? "bg-[#89CFF1]/40" : "bg-[#0a0a0a]/08"}`}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: hov ? 1 : 0 }}
+        transition={{ duration: 0.55, ease: EASE }}
+      />
+    </motion.div>
+  );
+};
+
+/* ─────────────────────────────────────────
+   SERVICE CARD
+───────────────────────────────────────── */
+const ServiceCard = ({ service, index, total }) => {
+  const [hov, setHov] = useState(false);
+  
+  // 'dark' is true for the first item. We will use this to apply your custom blue.
+  const dark = index === 0; 
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 70, filter: "blur(14px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 1.05, delay: index * 0.15, ease: EASE_EXPO }}
+      onHoverStart={() => setHov(true)}
+      onHoverEnd={() => setHov(false)}
+      // Swapped bg-[#080808] for your custom bg-[#113255]
+      className={`group relative rounded-[28px] overflow-hidden cursor-default ${dark ? "bg-[#113255]" : "bg-[#f5f5f5]"}`}
+    >
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        animate={{ opacity: hov ? 1 : 0 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          background: dark
+            ? "radial-gradient(ellipse at 18% 50%, rgba(137,207,241,0.15) 0%, transparent 55%)"
+            : "radial-gradient(ellipse at 82% 50%, rgba(10,10,10,0.04) 0%, transparent 55%)",
+        }}
+      />
+      {dark && (
+        <div
+          className="absolute top-0 right-0 w-[480px] h-[480px] pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(137,207,241,0.08) 0%, transparent 60%)",
+          }}
+        />
+      )}
+
+      <div className="relative z-10 flex flex-col lg:flex-row lg:items-stretch min-h-[270px] sm:min-h-[310px]">
+        {/* Index column */}
+        <div
+          className={`hidden lg:flex items-center justify-center w-24 xl:w-28 shrink-0 border-r ${dark ? "border-white/[0.08]" : "border-black/[0.055]"}`}
+        >
+          <motion.span
+            animate={{
+              opacity: hov ? (dark ? 0.2 : 0.07) : dark ? 0.1 : 0.04,
+            }}
+            transition={{ duration: 0.6, ease: EASE }}
+            className={`font-bold select-none ${dark ? "text-white" : "text-[#0a0a0a]"}`}
+            style={{
+              fontSize: "clamp(2.8rem, 4vw, 5rem)",
+              lineHeight: 1,
+              letterSpacing: "-0.04em",
+            }}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </motion.span>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 flex flex-col justify-between p-8 sm:p-10 lg:p-11">
+          <div className="flex items-center justify-between mb-7">
+            <span
+              className={`text-[8px] font-bold tracking-[0.3em] uppercase ${dark ? "text-white/30" : "text-[#c8c8c8]"}`}
+            >
+              {String(index + 1).padStart(2, "0")} /{" "}
+              {String(total).padStart(2, "0")}
+            </span>
+            <motion.div
+              animate={{ scale: [1, 1.8, 1], opacity: [0.3, 0.8, 0.3] }}
+              transition={{
+                duration: 3.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 0.9,
+              }}
+              className={`w-1.5 h-1.5 rounded-full ${dark ? "bg-[#89CFF1]" : "bg-[#0a0a0a]/25"}`}
+            />
+          </div>
+          <div className="flex-1 flex flex-col justify-center gap-4">
+            <h3
+              className={`font-bold tracking-[-0.03em] leading-[1.08] ${dark ? "text-white" : "text-[#0a0a0a]"}`}
+              style={{ fontSize: "clamp(1.2rem, 2vw, 2rem)" }}
+            >
+              {service.heading}
+            </h3>
+            <p
+              className={`text-[14.5px] font-light leading-[1.84] max-w-lg ${dark ? "text-white/60" : "text-[#666]"}`}
+            >
+              {service.body}
+            </p>
+          </div>
+          <motion.div
+            className="mt-8 flex items-center gap-3"
+            animate={{ x: hov ? 8 : 0 }}
+            transition={{ duration: 0.45, ease: EASE }}
+          >
+            <span
+              className={`text-[9px] font-bold tracking-[0.22em] uppercase ${dark ? "text-white/40" : "text-[#bbb]"}`}
+            >
+              {service.label}
+            </span>
+            <motion.div
+              animate={{ width: hov ? 36 : 12 }}
+              transition={{ duration: 0.45, ease: EASE }}
+              className={`h-px ${dark ? "bg-white/20" : "bg-[#d0d0d0]"}`}
+            />
+          </motion.div>
+        </div>
+
+        {/* Tags column */}
+        <div
+          className={`hidden lg:flex flex-col justify-center gap-2.5 w-44 xl:w-52 shrink-0 p-8 border-l ${dark ? "border-white/[0.08]" : "border-black/[0.055]"}`}
+        >
+          {service.tags.map((tag, ti) => (
+            <motion.span
+              key={tag}
+              initial={{ opacity: 0, x: 18 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.55,
+                delay: 0.3 + index * 0.12 + ti * 0.1,
+                ease: EASE,
+              }}
+              className={`text-[8.5px] font-semibold tracking-[0.18em] uppercase px-3 py-2 rounded-xl border ${
+                dark
+                  ? "border-white/[0.15] text-white/50 bg-white/[0.05]"
+                  : "border-[#e6e6e6] text-[#888] bg-white"
+              }`}
+            >
+              {tag}
+            </motion.span>
+          ))}
+        </div>
+      </div>
+
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: hov ? 1 : 0 }}
+        transition={{ duration: 0.65, ease: EASE }}
+        className={`absolute bottom-0 inset-x-0 h-[1.5px] origin-left ${dark ? "bg-[#89CFF1]/60" : "bg-[#0a0a0a]/08"}`}
+      />
+
+      <div className="lg:hidden flex flex-wrap gap-2 px-8 pb-8">
+        {service.tags.map((tag) => (
+          <span
+            key={tag}
+            className={`text-[8.5px] font-semibold tracking-[0.14em] uppercase px-3 py-1.5 rounded-full border ${dark ? "border-white/[0.15] text-white/50 bg-white/[0.05]" : "border-[#e0e0e0] text-[#777] bg-white"}`}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+/* ─────────────────────────────────────────
+   PAGE
+───────────────────────────────────────── */
+export default function Home() {
+  const heroRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+
+  const services = [
+    {
+      label: "AI Website Optimization",
+      heading: "AI-Powered Website Optimization",
+      body: "Turn your website into a high-performance booking engine. We transform outdated hotel websites into fast, modern, and conversion-focused platforms. Our AI-powered optimization ensures your website performs smoothly on all devices, built to convert visitors into direct bookings.",
+      tags: ["Performance", "AI Optimization", "Direct Bookings"],
+    },
+    {
+      label: "Reputation Management",
+      heading: "Reputation Management",
+      body: "Build trust. Increase bookings. Your online reputation directly impacts your revenue. We help you manage and strengthen it by handling customer reviews and maintaining a consistent, professional brand presence across platforms.",
+      tags: ["Review Management", "Brand Trust", "Growth"],
+    },
+  ];
+
+  const tickerA = [
+    "Strategic Growth",
+    "Digital Visibility",
+    "Global Reach",
+    "Market Entry",
+    "AI-Powered SEO",
+    "Brand Presence",
+    "Legal Foundations",
+    "Elite Partnerships",
+  ];
+
+  return (
+    <div
+      className="bg-white text-[#0a0a0a] overflow-x-hidden"
+      style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+    >
+      {/* ══ 1 · HERO ══ */}
+      <section
+        ref={heroRef}
+        className="relative w-full h-screen min-h-[640px] overflow-hidden flex items-center justify-center bg-black"
+      >
+        <motion.div
+          style={{ y: heroY, scale: heroScale }}
+          className="absolute inset-0 z-0"
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/bg01.mp4" type="video/mp4" />
+          </video>
+        </motion.div>
+
+        {/* Deep cinematic grade — two layered overlays */}
+        <div
+          className="absolute inset-0 z-[1]"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.7) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 z-[1]"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 44%, transparent 16%, rgba(2,6,20,0.6) 65%, rgba(0,0,0,0.95) 100%)",
+          }}
+        />
+
+        <Particles />
+
+        <motion.div
+          style={{ opacity: heroOpacity }}
+          className="relative z-20 text-center px-5 max-w-4xl mx-auto w-full"
+        >
+          <div className="overflow-hidden mb-7">
+            <motion.p
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1.1, ease: EASE_EXPO }}
+              className="text-white/50 text-[8.5px] font-semibold tracking-[0.46em] uppercase"
+            ></motion.p>
+          </div>
+
+          <div className="overflow-hidden mb-5">
+            <motion.h1
+              initial={{ y: "55%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1.3, delay: 0.14, ease: EASE_EXPO }}
+              className="text-[clamp(2.8rem,6.5vw,6.2rem)] font-bold tracking-[-0.045em] leading-[0.95] text-white"
+              style={{ textShadow: "0 6px 80px rgba(0,0,0,0.5)" }}
+            >
+              Your AI Partner For
+              <br />
+              <span
+                className="text-6xl font-extralight text-white/55"
+                style={{ letterSpacing: "-0.03em" }}
+              >
+                Websites, Bookings & Payments
+              </span>
+            </motion.h1>
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, delay: 0.36, ease: EASE }}
+            className="text-white/55 text-[14.5px] sm:text-[15.5px] font-light max-w-sm mx-auto mb-12 leading-[1.75] px-2"
+          >
+            We help businesses become visible, connect globally, and grow
+            through strategic expansion and digital presence.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.54, ease: EASE }}
+            className="flex flex-col sm:flex-row gap-3 justify-center px-4"
+          >
+            <Magnetic>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-3 bg-white text-[#0a0a0a] text-[11.5px] font-bold px-8 py-[14px] rounded-full tracking-[0.04em] hover:bg-white/92 active:scale-95 transition-all duration-200"
+              >
+                Start Your Growth
+                <motion.svg
+                  className="w-3 h-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </motion.svg>
+              </Link>
+            </Magnetic>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="absolute bottom-9 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+        >
+          <motion.span
+            animate={{ opacity: [0.25, 0.65, 0.25] }}
+            transition={{ duration: 2.6, repeat: Infinity }}
+            className="text-[7.5px] font-bold tracking-[0.32em] uppercase text-white/28"
+          >
+            Scroll
+          </motion.span>
+          <div className="w-px h-12 bg-white/14 relative overflow-hidden">
+            <motion.div
+              animate={{ y: ["-100%", "220%"] }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-x-0 h-1/2 bg-white/45"
+            />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ══ TICKER ══ */}
+      <div className="py-11 overflow-hidden bg-white select-none border-y border-[#f2f2f2]">
+        <MarqueeRow
+          items={tickerA}
+          direction={1}
+          speed={0.28}
+          className="text-[clamp(1rem,2vw,1.65rem)] font-bold text-[#0a0a0a]/12 tracking-[-0.01em]"
+        />
+      </div>
+
+      {/* ══ 2 · WHO WE ARE ══ */}
+      <section
+        id="about"
+        className="pt-20 sm:pt-28 pb-16 sm:pb-20 px-5 md:px-10 lg:px-20 max-w-[1440px] mx-auto"
+      >
+        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-24 items-end mb-12 sm:mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 44 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: EASE_EXPO }}
+          >
+            <Tag>Who We Are</Tag>
+            <h2 className="text-[clamp(2rem,3.8vw,3.8rem)] font-bold tracking-[-0.035em] leading-[1.04]">
+              Business
+              <br />
+              <motion.span
+                initial={{ color: "#0a0a0a" }}
+                whileInView={{ color: "#d4d4d4" }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.6, delay: 0.7, ease: EASE_OUT }}
+                className="block"
+              >
+                People First.
+              </motion.span>
+            </h2>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 44 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.22, ease: EASE_EXPO }}
+            className="flex flex-col gap-5 lg:pb-2"
+          >
+            <p className="text-[#666] text-[14.5px] font-light leading-[1.88]">
+              We work with owners and operators who care about how their
+              business is experienced — not just how it looks. From first
+              impression to final conversion, every touchpoint is designed to
+              feel effortless, refined, and aligned with growth.
+            </p>
+            <p className="text-[#666] text-[14.5px] font-light leading-[1.88]">
+              Behind every seamless experience is a strong system — visibility,
+              bookings, and payments working together quietly in the background,
+              so your focus stays where it matters most: delivering value.
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_320px] lg:grid-cols-[1fr_360px] gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 55, filter: "blur(12px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.3, ease: EASE_EXPO }}
+            className="relative rounded-[28px] overflow-hidden bg-[#f3f3f3]"
+            style={{ minHeight: "380px" }}
+          >
+            <Image
+              src="/home02.png"
+              alt="Business People"
+              fill
+              className="object-cover object-top"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(10,10,10,0.5) 0%, transparent 55%)",
+              }}
+            />
+            <div className="absolute bottom-0 inset-x-0 p-7 z-10">
+              <p className="text-white/55 text-[8px] font-bold tracking-[0.24em] uppercase">
+                Our Approach
+              </p>
+            </div>
+          </motion.div>
+
+          <div className="flex sm:flex-col gap-4">
+            <motion.div
+              initial={{ opacity: 0, x: 40, filter: "blur(10px)" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.05, delay: 0.2, ease: EASE_EXPO }}
+              className="flex-1 sm:flex-none rounded-[28px] p-7 flex flex-col overflow-hidden relative"
+              style={{
+                minHeight: "208px",
+                background: "#113256",
+              }}
+            >
+              <div
+                className="absolute inset-0 opacity-[0.022]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)",
+                  backgroundSize: "36px 36px",
+                }}
+              />
+              <div
+                className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(137,207,241,0.13) 0%, transparent 70%)",
+                }}
+              />
+              <p className="text-[8px] font-bold tracking-[0.26em] uppercase text-white/40 mb-5 relative z-10">
+                At a glance
+              </p>
+              <div className="flex flex-col gap-0 relative z-10 mt-auto">
+                {[
+                  { n: "6+", l: "Markets Connected" },
+                  { n: "10M+", l: "Growth Vision" },
+                  { n: "100%", l: "Performance Focused" },
+                ].map(({ n, l }, i) => (
+                  <motion.div
+                    key={l}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.55,
+                      delay: 0.32 + i * 0.13,
+                      ease: EASE,
+                    }}
+                    className="flex items-center justify-between py-3.5 border-t border-white/[0.065] first:border-0"
+                  >
+                    <span className="text-[8.5px] font-semibold tracking-[0.18em] uppercase text-white/35">
+                      {l}
+                    </span>
+                    <span className="text-[1.4rem] font-bold text-white tracking-tight tabular-nums">
+                      {n}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40, filter: "blur(10px)" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.05, delay: 0.34, ease: EASE_EXPO }}
+              className="flex-1 sm:flex-none bg-[#f5f5f5] rounded-[28px] p-7 flex flex-col justify-between"
+              style={{ minHeight: "152px" }}
+            >
+              <span
+                className="text-[2.2rem] text-[#e0e0e0] leading-none select-none"
+                style={{ fontFamily: "Georgia, serif" }}
+              >
+                "
+              </span>
+              <p className="text-[13.5px] font-semibold text-[#0a0a0a] leading-[1.6] tracking-[-0.012em]">
+                Presence creates trust.
+                <br />
+                Experience creates return.
+              </p>
+              <p className="text-[8px] font-bold tracking-[0.26em] uppercase text-[#c0c0c0] mt-2.5">
+                CYouMedia Principle
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ 3 · SERVICE CORE ══ */}
+      <section
+        id="services"
+        className="pt-20 sm:pt-28 pb-20 sm:pb-28 px-5 md:px-10 lg:px-20 max-w-[1440px] mx-auto"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-14">
+          <div>
+            <Tag>Our Expertise</Tag>
+            <div className="overflow-hidden">
+              <motion.h2
+                initial={{ y: "100%", opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.05, ease: EASE_EXPO }}
+                className="text-[clamp(2.2rem,4vw,4.5rem)] font-bold tracking-[-0.04em] leading-[0.95]"
+              >
+                Service
+                <br />
+                <span className="text-[#cccccc]">Core.</span>
+              </motion.h2>
+            </div>
+          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2, ease: EASE }}
+            className="text-[#aaa] text-[13px] font-light leading-relaxed max-w-xs sm:text-right sm:pb-1"
+          >
+            Two core disciplines.
+            <br />
+            One outcome. Your growth.
+          </motion.p>
+        </div>
+        <div className="flex flex-col gap-4">
+          {services.map((s, i) => (
+            <ServiceCard
+              key={i}
+              service={s}
+              index={i}
+              total={services.length}
+            />
+          ))}
+        </div>
+      </section>
+
+      
+    </div>
+  );
+}
+
+
+but instaed of the green add this color #113254

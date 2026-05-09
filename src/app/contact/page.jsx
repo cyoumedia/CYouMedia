@@ -1,451 +1,317 @@
 "use client";
 
-import { useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useMotionValue,
-} from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
-/* ─────────────────────────────────────────
-   CONSTANTS
-───────────────────────────────────────── */
-const EASE      = [0.16, 1, 0.3, 1];
-const EASE_EXPO = [0.87, 0, 0.13, 1];
-
-/* ─────────────────────────────────────────
-   MAGNETIC
-───────────────────────────────────────── */
-const Magnetic = ({ children, strength = 0.35 }) => {
-  const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 200, damping: 20 });
-  const sy = useSpring(y, { stiffness: 200, damping: 20 });
-  const handleMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    x.set((e.clientX - (rect.left + rect.width / 2)) * strength);
-    y.set((e.clientY - (rect.top + rect.height / 2)) * strength);
-  };
-  return (
-    <motion.div ref={ref} onMouseMove={handleMove} onMouseLeave={() => { x.set(0); y.set(0); }} style={{ x: sx, y: sy }}>
-      {children}
-    </motion.div>
-  );
-};
-
-/* ─────────────────────────────────────────
-   TAG
-───────────────────────────────────────── */
-const Tag = ({ children, light = false }) => (
-  <motion.span
-    initial={{ opacity: 0, x: -16 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.8, ease: EASE }}
-    className={`inline-flex items-center gap-3 text-[9px] font-bold tracking-[0.32em] uppercase mb-6 ${
-      light ? "text-white/35" : "text-[#999]"
-    }`}
-  >
-    <motion.span
-      initial={{ scaleX: 0 }}
-      whileInView={{ scaleX: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: EASE }}
-      className={`block w-5 h-px origin-left ${light ? "bg-white/25" : "bg-[#ccc]"}`}
-    />
-    {children}
-  </motion.span>
+/* ─── ICONS ─── */
+const ArrowRight = () => (
+  <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M12 5l7 7-7 7" />
+  </svg>
+);
+const MailIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+);
+const GlobeIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+const CheckIcon = () => (
+  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+  </svg>
 );
 
-/* ─────────────────────────────────────────
-   PAGE
-───────────────────────────────────────── */
-export default function Contact() {
-  const heroRef    = useRef(null);
-  const formRef    = useRef(null);
+/* ─── EASING ─── */
+const EASE = [0.16, 1, 0.3, 1];
 
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY     = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const heroOp    = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+/* ─── FADE-IN WRAPPER ─── */
+const Reveal = ({ children, delay = 0, className = "", x = 0, y = 24 }) => (
+  <motion.div
+    initial={{ opacity: 0, y, x }}
+    whileInView={{ opacity: 1, y: 0, x: 0 }}
+    viewport={{ once: true, margin: "-80px" }}
+    transition={{ duration: 0.9, delay, ease: EASE }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+);
+
+/* ─── EYEBROW LABEL ─── */
+const Eyebrow = ({ children, dark = false }) => (
+  <div
+    className={`inline-flex items-center gap-2.5 text-[10px] font-bold tracking-[0.3em] uppercase mb-6 ${
+      dark ? "text-[#7bafd4]" : "text-[#3a7fc1]"
+    }`}
+  >
+    <span className={`w-5 h-px ${dark ? "bg-[#7bafd4]/50" : "bg-[#3a7fc1]/40"}`} />
+    {children}
+  </div>
+);
+
+/* ════════════════════════════════════════
+   CONTACT PAGE
+════════════════════════════════════════ */
+export default function ContactPage() {
+  const [formState, setFormState] = useState({
+    fullName: "",
+    company: "",
+    businessEmail: "",
+    interest: "",
+    message: ""
+  });
+
+  const interests = [
+    "Strategic Expansion",
+    "Digital Presence",
+    "Elite Networking",
+    "Full Partnership"
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formState);
+  };
+
+  const handleChange = (e) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleInterestSelect = (interest) => {
+    setFormState({ ...formState, interest });
+  };
+
+  const locations = ["Sweden", "London", "USA", "Singapore", "Sri Lanka"];
 
   return (
-    <div
-      className="bg-white text-[#0a0a0a] overflow-x-hidden"
-      style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
-    >
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
-      {/* ══ 1 ▸ HERO ══ */}
-      <section
-        ref={heroRef}
-        className="relative w-full overflow-hidden flex items-center justify-center text-center bg-[#080808]"
-        style={{ minHeight: "60vh" }}
-      >
-        {/* Grid texture */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(137,207,241,1) 1px, transparent 1px), linear-gradient(90deg, rgba(137,207,241,1) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
-        {/* Center glow */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 55%, rgba(137,207,241,0.08) 0%, transparent 65%)" }} />
-        {/* Parallax bg */}
-        <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 z-0">
-          <Image src="/bg.png" alt="Contact" fill className="object-cover opacity-[0.18] grayscale" priority />
-        </motion.div>
-        {/* Rounded white reveal */}
-        <div className="absolute bottom-0 inset-x-0 h-16 z-10 bg-white" style={{ borderRadius: "40px 40px 0 0" }} />
+        .noise::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+          opacity: 0.035;
+          pointer-events: none;
+          z-index: 1;
+        }
 
-        <motion.div
-          style={{ opacity: heroOp }}
-          className="relative z-20 flex flex-col items-center gap-6 px-5 pt-36 pb-28 max-w-3xl mx-auto w-full"
-        >
-          <div className="overflow-hidden">
-            <motion.p
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: EASE_EXPO }}
-              className="text-[9px] font-bold tracking-[0.36em] uppercase text-white/35"
-            >
-              Connect With Us
-            </motion.p>
+        /* Input styling */
+        .form-input {
+          width: 100%;
+          border-radius: 1rem;
+          border: 1px solid #f1f5f9;
+          background-color: #fafafa;
+          padding: 1.1rem 1.25rem;
+          font-size: 0.95rem;
+          color: #0d2640;
+          outline: none;
+          transition: all 0.2s ease;
+        }
+        .form-input::placeholder {
+          color: #cbd5e1;
+          font-weight: 400;
+        }
+        .form-input:focus {
+          border-color: #e2e8f0;
+          background-color: #ffffff;
+          box-shadow: 0 0 0 4px rgba(241, 245, 249, 0.5);
+        }
+        .form-label {
+          display: block;
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          color: #94a3b8;
+          text-transform: uppercase;
+          margin-bottom: 0.5rem;
+        }
+      `}</style>
+
+      <div className="min-h-screen bg-[#f8fafc] font-['DM_Sans',sans-serif]">
+        
+        {/* ══════════════════════════════════
+            HERO SECTION
+        ══════════════════════════════════ */}
+        <section className="noise relative overflow-hidden bg-[linear-gradient(160deg,#07172a_0%,#0d2640_100%)] pt-[clamp(6rem,10vh,8rem)] pb-[clamp(4rem,8vh,6rem)]">
+          <div className="pointer-events-none absolute left-[10%] top-0 h-[600px] w-[800px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(58,127,193,0.2)_0%,transparent_70%)]" />
+          
+          <div className="relative z-10 mx-auto max-w-[1200px] px-[clamp(1rem,4vw,2rem)] text-left pt-15">
+            <Reveal y={20}>
+              <Eyebrow dark>Get In Touch</Eyebrow>
+              <h1 className="mb-4 font-['DM_Sans',sans-serif] text-[clamp(2.5rem,5vw,4rem)] font-light leading-[1.05] tracking-[-0.03em] text-white">
+                Let's start a <br />
+                <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#7bafd4]">
+                  Conversation.
+                </em>
+              </h1>
+              <p className="max-w-[500px] text-[clamp(1rem,1.5vw,1.15rem)] font-light leading-[1.75] text-white/60">
+                Ready to optimize your digital presence? Reach out to our team to discover how we can drive your growth.
+              </p>
+            </Reveal>
           </div>
-          <div className="flex flex-col items-center gap-0">
-            <div className="overflow-hidden">
-              <motion.h1
-                initial={{ y: "70%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 1.1, delay: 0.08, ease: EASE_EXPO }}
-                className="font-bold tracking-[-0.035em] leading-[1.0] text-white"
-                style={{ fontSize: "clamp(2.8rem, 6.5vw, 6rem)" }}
-              >
-                Let's Talk
-              </motion.h1>
-            </div>
-            <div className="overflow-hidden">
-              <motion.h1
-                initial={{ y: "70%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 1.1, delay: 0.16, ease: EASE_EXPO }}
-                className="font-extralight tracking-[-0.025em] leading-[1.0] text-white/55"
-                style={{ fontSize: "clamp(2.8rem, 6.5vw, 6rem)" }}
-              >
-                Growth.
-              </motion.h1>
-            </div>
-          </div>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.32, ease: EASE }}
-            className="text-[15px] font-light text-white/40 leading-relaxed max-w-sm"
-          >
-            Ready to become visible? Let's build your presence from the ground up.
-          </motion.p>
-        </motion.div>
-      </section>
+        </section>
 
-      {/* ══ 2 ▸ CONTACT BODY ══ */}
-      <section
-        ref={formRef}
-        className="pt-16 sm:pt-24 pb-20 sm:pb-28 px-5 md:px-10 lg:px-20 max-w-[1440px] mx-auto"
-      >
-        <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24 items-start">
-
-          {/* ── Left: contact directory ── */}
-          <motion.div
-            initial={{ opacity: 0, x: -32, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.1, ease: EASE_EXPO }}
-            className="flex flex-col gap-0 lg:sticky lg:top-24"
-          >
-            <Tag>Get In Touch</Tag>
-
-            <div className="overflow-hidden mb-8">
-              <motion.h2
-                initial={{ y: "100%", opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, ease: EASE_EXPO }}
-                className="font-bold tracking-[-0.03em] leading-[1.07] text-[#0a0a0a]"
-                style={{ fontSize: "clamp(1.8rem, 3vw, 3rem)" }}
-              >
-                Start a conversation.<br />
-                <span className="text-[#c8c8c8]">We respond fast.</span>
-              </motion.h2>
-            </div>
-
-            <div className="flex flex-col gap-0 divide-y divide-[#f0f0f0]">
-
-              {/* Email */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
-                className="py-7"
-              >
-                <p className="text-[9px] font-bold tracking-[0.26em] uppercase text-[#ccc] mb-3">Direct Inquiry</p>
-                <a
-                  href="mailto:hello@cyoumedia.com"
-                  className="text-[clamp(1rem,2vw,1.35rem)] font-bold text-[#0a0a0a] tracking-tight hover:text-[#89CFF1] transition-colors duration-200 block mb-2"
-                >
-                  hello@cyoumedia.com
-                </a>
-                <a
-                  href="tel:+4681234567"
-                  className="flex items-center gap-2 text-[14px] font-light text-[#999] hover:text-[#0a0a0a] transition-colors duration-200 w-max"
-                >
-                  <svg className="w-3.5 h-3.5 text-[#89CFF1] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  +46 (0) 8 123 45 67
-                </a>
-              </motion.div>
-
-              {/* HQ */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.18, ease: EASE }}
-                className="py-7"
-              >
-                <p className="text-[9px] font-bold tracking-[0.26em] uppercase text-[#ccc] mb-3">Headquarters</p>
-                <p className="text-[14px] font-light text-[#777] leading-[1.85]">
-                  Sveavägen 44<br />
-                  111 34 Stockholm<br />
-                  Sweden
+        {/* ══════════════════════════════════
+            CONTACT SECTION
+        ══════════════════════════════════ */}
+        <section className="px-[clamp(1.25rem,4vw,2rem)] py-[clamp(4rem,10vw,8rem)]">
+          <div className="mx-auto max-w-[1200px] grid grid-cols-1 gap-[clamp(4rem,8vw,6rem)] lg:grid-cols-12">
+            
+            {/* Left Column: Contact Details */}
+            <div className="lg:col-span-4 lg:pt-8">
+              <Reveal>
+                <h2 className="mb-6 font-['DM_Sans',sans-serif] text-[clamp(1.8rem,3vw,2.4rem)] font-light leading-[1.15] tracking-[-0.03em] text-[#0d2640]">
+                  Contact <span className="italic text-[#3a7fc1]">Cyoumedia</span>
+                </h2>
+                <p className="mb-10 text-[1rem] font-light leading-[1.8] text-[#6b7280]">
+                  Whether you need a complete digital overhaul, strategic SEO optimization, or advanced reputation management, we're here to help.
                 </p>
-              </motion.div>
 
-              {/* Social */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.26, ease: EASE }}
-                className="py-7"
-              >
-                <p className="text-[9px] font-bold tracking-[0.26em] uppercase text-[#ccc] mb-5">Connect</p>
-                <div className="flex gap-3">
-                  {[
-                    {
-                      label: "LinkedIn",
-                      icon: (
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                      ),
-                      fill: true,
-                    },
-                    {
-                      label: "X",
-                      icon: (
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                      ),
-                      fill: true,
-                    },
-                    {
-                      label: "Instagram",
-                      icon: (
-                        <>
-                          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                        </>
-                      ),
-                      fill: false,
-                    },
-                  ].map((s, i) => (
-                    <motion.a
-                      key={s.label}
-                      href="#"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: 0.3 + i * 0.08, ease: EASE }}
-                      whileHover={{ y: -3, transition: { duration: 0.25, ease: EASE } }}
-                      className="w-11 h-11 rounded-2xl border border-[#ececec] bg-[#fafafa] flex items-center justify-center text-[#bbb] hover:text-[#0a0a0a] hover:border-[#d0d0d0] hover:bg-white transition-colors duration-200"
-                      aria-label={s.label}
-                    >
-                      <svg className="w-4 h-4" fill={s.fill ? "currentColor" : "none"} stroke={s.fill ? "none" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                        {s.icon}
-                      </svg>
-                    </motion.a>
-                  ))}
-                </div>
-              </motion.div>
-
-            </div>
-          </motion.div>
-
-          {/* ── Right: form ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.1, delay: 0.1, ease: EASE_EXPO }}
-          >
-            <div className="relative bg-white rounded-3xl border border-[#ececec] p-8 sm:p-12 overflow-hidden" style={{ boxShadow: "0 8px 48px rgba(0,0,0,0.05)" }}>
-              {/* Subtle accent glow */}
-              <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(137,207,241,0.06) 0%, transparent 65%)" }} />
-
-              <div className="relative z-10 flex flex-col gap-6">
-
-                {/* Name + Company */}
-                <div className="grid sm:grid-cols-2 gap-5">
-                  {[{ label: "Full Name", placeholder: "John Doe", type: "text" }, { label: "Company", placeholder: "Enterprise Inc.", type: "text" }].map((f) => (
-                    <div key={f.label} className="flex flex-col gap-2">
-                      <label className="text-[9px] font-bold uppercase tracking-[0.26em] text-[#ccc]">{f.label}</label>
-                      <input
-                        type={f.type}
-                        placeholder={f.placeholder}
-                        className="w-full bg-[#fafafa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-[14px] text-[#0a0a0a] placeholder:text-[#d0d0d0] outline-none transition-all duration-200 focus:border-[#89CFF1] focus:bg-white"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Email */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-[9px] font-bold uppercase tracking-[0.26em] text-[#ccc]">Business Email</label>
-                  <input
-                    type="email"
-                    placeholder="john@enterprise.com"
-                    className="w-full bg-[#fafafa] border border-[#f0f0f0] rounded-2xl px-5 py-3.5 text-[14px] text-[#0a0a0a] placeholder:text-[#d0d0d0] outline-none transition-all duration-200 focus:border-[#89CFF1] focus:bg-white"
-                  />
-                </div>
-
-                {/* Service interest */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-[9px] font-bold uppercase tracking-[0.26em] text-[#ccc]">I'm interested in</label>
-                  <div className="flex flex-wrap gap-2">
-                    {["Strategic Expansion", "Digital Presence", "Elite Networking", "Full Partnership"].map((opt, i) => (
-                      <motion.label
-                        key={opt}
-                        initial={{ opacity: 0, y: 8 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: 0.2 + i * 0.06, ease: EASE }}
-                        className="flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] uppercase px-3.5 py-2 rounded-xl border border-[#ececec] text-[#888] bg-[#fafafa] cursor-pointer hover:border-[#89CFF1] hover:text-[#0a0a0a] transition-colors duration-200 select-none"
-                      >
-                        <input type="checkbox" className="w-3 h-3 accent-[#89CFF1]" />
-                        {opt}
-                      </motion.label>
-                    ))}
+                <div className="flex items-start gap-4">
+                  <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-[#e8f0f8] text-[#3a7fc1]">
+                    <MailIcon />
+                  </div>
+                  <div className="pt-1">
+                    <p className="mb-1 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-[#94a3b8]">General Inquiries</p>
+                    <a href="mailto:info@cyoumedia.lk" className="text-[1.05rem] font-medium text-[#0d2640] transition-colors hover:text-[#3a7fc1]">
+                      info@cyoumedia.lk
+                    </a>
                   </div>
                 </div>
-
-                {/* Message */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-[9px] font-bold uppercase tracking-[0.26em] text-[#ccc]">Message</label>
-                  <textarea
-                    rows={5}
-                    placeholder="Describe your expansion or visibility goals..."
-                    className="w-full bg-[#fafafa] border border-[#f0f0f0] rounded-2xl px-5 py-4 text-[14px] text-[#0a0a0a] placeholder:text-[#d0d0d0] outline-none transition-all duration-200 focus:border-[#89CFF1] focus:bg-white resize-none leading-relaxed"
-                  />
-                </div>
-
-                {/* Submit */}
-                <Magnetic>
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-center gap-2.5 bg-[#0a0a0a] text-white text-[12px] font-bold tracking-[0.14em] uppercase py-4 rounded-2xl hover:bg-[#222] active:scale-[0.99] transition-all duration-200"
-                  >
-                    Initiate Partnership
-                    <motion.svg
-                      className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </motion.svg>
-                  </button>
-                </Magnetic>
-
-                <p className="text-center text-[11px] font-light text-[#ccc] tracking-[0.04em]">
-                  We respond within 24 hours · No commitments required
-                </p>
-              </div>
+              </Reveal>
             </div>
-          </motion.div>
 
-        </div>
-      </section>
+            {/* Right Column: Premium Form */}
+            <Reveal delay={0.15} x={20} className="lg:col-span-8">
+              <div className="rounded-[2.5rem] bg-white p-[clamp(2rem,5vw,4rem)] shadow-[0_12px_40px_rgba(7,23,42,0.03)] border border-[#f1f5f9]">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                  
+                  {/* Row 1: Name & Company */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="fullName" className="form-label">Full Name</label>
+                      <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        value={formState.fullName}
+                        onChange={handleChange}
+                        placeholder="John Doe"
+                        className="form-input"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="company" className="form-label">Company</label>
+                      <input
+                        type="text"
+                        id="company"
+                        name="company"
+                        value={formState.company}
+                        onChange={handleChange}
+                        placeholder="Enterprise Inc."
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
 
-      {/* ══ 3 ▸ DARK CTA ══ */}
-      <section className="px-5 md:px-10 lg:px-20 pb-16 sm:pb-20 max-w-[1440px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 48, filter: "blur(12px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.1, ease: EASE_EXPO }}
-          className="rounded-3xl bg-[#080808] px-8 sm:px-14 py-14 sm:py-18 text-center relative overflow-hidden"
-        >
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse at 50% -10%, rgba(137,207,241,0.16) 0%, transparent 60%)" }}
-          />
-          <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+                  {/* Row 2: Email */}
+                  <div>
+                    <label htmlFor="businessEmail" className="form-label">Business Email</label>
+                    <input
+                      type="email"
+                      id="businessEmail"
+                      name="businessEmail"
+                      value={formState.businessEmail}
+                      onChange={handleChange}
+                      placeholder="john@enterprise.com"
+                      className="form-input"
+                    />
+                  </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-[9px] font-bold tracking-[0.34em] uppercase text-white/18 mb-5 relative z-10"
-          >
-            CYouMedia
-          </motion.p>
+                  {/* Row 3: Interests (Chips) */}
+                  <div>
+                    <label className="form-label mb-3">I'm Interested In</label>
+                    <div className="flex flex-wrap gap-3">
+                      {interests.map((interest) => {
+                        const isSelected = formState.interest === interest;
+                        return (
+                          <button
+                            key={interest}
+                            type="button"
+                            onClick={() => handleInterestSelect(interest)}
+                            className={`relative flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.85rem] font-medium transition-all duration-300 ${
+                              isSelected
+                                ? "bg-[#0d2640] text-white shadow-[0_4px_12px_rgba(13,38,64,0.15)]"
+                                : "bg-white text-[#64748b] border border-[#e2e8f0] hover:border-[#cbd5e1] hover:bg-[#f8fafc]"
+                            }`}
+                          >
+                            {/* Conditional Check Icon */}
+                            {isSelected ? (
+                              <motion.span
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="flex items-center justify-center"
+                              >
+                                <CheckIcon />
+                              </motion.span>
+                            ) : (
+                              <span className="h-3.5 w-3.5 rounded-sm border border-[#cbd5e1]" />
+                            )}
+                            {interest}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-          <motion.h2
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.1, ease: EASE_EXPO }}
-            className="relative z-10 font-bold tracking-[-0.018em] text-white mb-4"
-            style={{ fontSize: "clamp(1.15rem, 2.2vw, 2rem)" }}
-          >
-            CYouMedia IS THE ONLY OPTION
-          </motion.h2>
+                  {/* Row 4: Message */}
+                  <div>
+                    <label htmlFor="message" className="form-label">Message</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formState.message}
+                      onChange={handleChange}
+                      rows={5}
+                      placeholder="Describe your expansion or visibility goals..."
+                      className="form-input resize-none"
+                    />
+                  </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative z-10 text-white/28 text-[12px] font-light tracking-[0.06em] mb-9"
-          >
-            Finns du — finns du. Syns du inte — finns du inte.
-          </motion.p>
+                  {/* Submit Button & Footer */}
+                  <div className="mt-4 flex flex-col items-center gap-6">
+                    <button
+                      type="submit"
+                      className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-[#0d2640] px-8 py-4 text-[0.95rem] font-bold tracking-[0.1em] uppercase text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#113254] hover:shadow-[0_12px_30px_rgba(13,38,64,0.2)]"
+                    >
+                      Reach Us <ArrowRight />
+                    </button>
+                    
+                    <p className="text-[0.8rem] font-light text-[#94a3b8]">
+                      We respond within 24 hours · No commitments required
+                    </p>
+                  </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative z-10"
-          >
-            <Magnetic>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-[#0a0a0a] text-[12px] font-bold px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200">
-                Start Your Growth
-                <motion.svg
-                  className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </motion.svg>
-              </Link>
-            </Magnetic>
-          </motion.div>
-        </motion.div>
-      </section>
+                </form>
+              </div>
+            </Reveal>
 
-    </div>
+          </div>
+        </section>
+
+        
+
+      </div>
+    </>
   );
 }
