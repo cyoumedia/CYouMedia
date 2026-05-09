@@ -150,7 +150,7 @@ export default function ContactPage() {
               <Eyebrow dark>Get In Touch</Eyebrow>
               <h1 className="mb-4 font-['DM_Sans',sans-serif] text-[clamp(2.5rem,5vw,4rem)] font-light leading-[1.05] tracking-[-0.03em] text-white">
                 Let's start a <br />
-                <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#7bafd4]">
+                <em className="font-['DM_Sans',sans-serif] font-normal italic text-[#7bafd4]">
                   Conversation.
                 </em>
               </h1>
@@ -308,9 +308,6 @@ export default function ContactPage() {
 
           </div>
         </section>
-
-        
-
       </div>
     </>
   );
