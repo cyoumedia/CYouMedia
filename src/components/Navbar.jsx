@@ -47,6 +47,17 @@ const Mag = ({ children }) => {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) setOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 64);
@@ -54,16 +65,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  useEffect(() => {
-    if (window.innerWidth >= 768) setOpen(false);
-    const fn = () => {
-      if (window.innerWidth >= 768) setOpen(false);
-    };
-    window.addEventListener("resize", fn);
-    return () => window.removeEventListener("resize", fn);
-  }, []);
-
-  const isHero = !scrolled;
+  const showSolidHeader = scrolled || (isMobile && open);
+  const isHero = !showSolidHeader;
 
   return (
     <>
@@ -78,7 +81,31 @@ export default function Navbar() {
         <motion.div
           className="w-full mx-auto flex items-center relative"
           animate={
-            scrolled
+            isMobile
+              ? showSolidHeader
+                ? {
+                    maxWidth: "100%",
+                    marginTop: 0,
+                    borderRadius: 0,
+                    paddingLeft: 24,
+                    paddingRight: 24,
+                    height: 64,
+                    backgroundColor: "rgba(255,255,255,0.95)",
+                    borderColor: "rgba(0,0,0,0.08)",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                  }
+                : {
+                    maxWidth: "100%",
+                    marginTop: 0,
+                    borderRadius: 0,
+                    paddingLeft: 24,
+                    paddingRight: 24,
+                    height: 64,
+                    backgroundColor: "rgba(255,255,255,0)",
+                    borderColor: "rgba(255,255,255,0)",
+                    boxShadow: "none",
+                  }
+              : scrolled
               ? {
                   maxWidth: 1120,
                   marginTop: 16,
@@ -241,13 +268,13 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -12, filter: "blur(8px)" }}
               transition={{ duration: 0.35, ease: EASE_EXPO }}
-              className="fixed top-[76px] left-4 right-4 z-[99] rounded-3xl overflow-hidden md:hidden"
+              className="fixed top-[64px] left-0 right-0 z-[99] overflow-hidden md:hidden"
               style={{
                 background: "rgba(255,255,255,0.97)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
-                border: "1px solid rgba(0,0,0,0.07)",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+                borderBottom: "1px solid rgba(0,0,0,0.07)",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.1)",
               }}
             >
               <div className="p-6 flex flex-col gap-1">
