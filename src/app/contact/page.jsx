@@ -25,6 +25,13 @@ const CheckIcon = () => (
   </svg>
 );
 
+const MapPinIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
 /* ─── EASING ─── */
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -150,9 +157,9 @@ export default function ContactPage() {
               <Eyebrow dark>Get In Touch</Eyebrow>
               <h1 className="mb-4 font-['DM_Sans',sans-serif] text-[clamp(2.5rem,5vw,4rem)] font-light leading-[1.05] tracking-[-0.03em] text-white">
                 Let's start a <br />
-                <em className="font-['DM_Sans',sans-serif] font-normal italic text-[#7bafd4]">
+                <p className="font-['DM_Sans',sans-serif] font-normal text-[#7bafd4]">
                   Conversation.
-                </em>
+                </p>
               </h1>
               <p className="max-w-[500px] text-[clamp(1rem,1.5vw,1.15rem)] font-light leading-[1.75] text-white/60">
                 Ready to optimize your digital presence? Reach out to our team to discover how we can drive your growth.
@@ -171,21 +178,36 @@ export default function ContactPage() {
             <div className="lg:col-span-4 lg:pt-8">
               <Reveal>
                 <h2 className="mb-6 font-['DM_Sans',sans-serif] text-[clamp(1.8rem,3vw,2.4rem)] font-light leading-[1.15] tracking-[-0.03em] text-[#0d2640]">
-                  Contact <span className="italic text-[#3a7fc1]">Cyoumedia</span>
+                  Contact <span className=" text-[#3a7fc1]">CYouMedia</span>
                 </h2>
                 <p className="mb-10 text-[1rem] font-light leading-[1.8] text-[#6b7280]">
                   Whether you need a complete digital overhaul, strategic SEO optimization, or advanced reputation management, we're here to help.
                 </p>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-[#e8f0f8] text-[#3a7fc1]">
-                    <MailIcon />
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-[#e8f0f8] text-[#3a7fc1]">
+                      <MailIcon />
+                    </div>
+                    <div className="pt-1">
+                      <p className="mb-1 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-[#94a3b8]">General Inquiries</p>
+                      <a href="mailto:info@cyoumedia.lk" className="text-[1.05rem] font-medium text-[#0d2640] transition-colors hover:text-[#3a7fc1]">
+                        info@cyoumedia.com
+                      </a>
+                    </div>
                   </div>
-                  <div className="pt-1">
-                    <p className="mb-1 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-[#94a3b8]">General Inquiries</p>
-                    <a href="mailto:info@cyoumedia.lk" className="text-[1.05rem] font-medium text-[#0d2640] transition-colors hover:text-[#3a7fc1]">
-                      info@cyoumedia.lk
-                    </a>
+
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-[#e8f0f8] text-[#3a7fc1]">
+                      <MapPinIcon />
+                    </div>
+                    <div className="pt-1">
+                      <p className="mb-1 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-[#94a3b8]">Address</p>
+                      <p className="text-[1.05rem] font-medium text-[#0d2640] leading-snug">
+                        Barkarbyvägen 46, <br />
+                        177 44 , <br/> Järfälla
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Reveal>

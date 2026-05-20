@@ -9,6 +9,11 @@ const ArrowRight = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M12 5l7 7-7 7" />
   </svg>
 );
+const ArrowUpRight = () => (
+  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M7 7h10v10" />
+  </svg>
+);
 const Check = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -19,9 +24,9 @@ const Check = () => (
 const EASE = [0.16, 1, 0.3, 1];
 
 /* ─── FADE-IN WRAPPER ─── */
-const Reveal = ({ children, delay = 0, className = "", x = 0 }) => (
+const Reveal = ({ children, delay = 0, className = "", x = 0, y = 24 }) => (
   <motion.div
-    initial={{ opacity: 0, y: 24, x }}
+    initial={{ opacity: 0, y, x }}
     whileInView={{ opacity: 1, y: 0, x: 0 }}
     viewport={{ once: true, margin: "-80px" }}
     transition={{ duration: 0.9, delay, ease: EASE }}
@@ -50,7 +55,6 @@ export default function Page() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const heroRef = useRef(null);
 
-  // --- Mouse tracking for Hero background ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -72,53 +76,52 @@ export default function Page() {
     "Digital Presence",
     "Booking Systems",
     "AI Automation",
-    
   ];
 
   const services = [
     {
       number: "01",
-      title: "AI-Powered Visibility",
-      subtitle: "Turn your website into a high-performance platform",
-      body: "We transform outdated hotel websites into fast, modern, and conversion-focused platforms. Our AI-powered optimization ensures your website loads quickly, performs smoothly on all devices, and is built to convert visitors into direct bookings.",
-      features: [
-        "Faster loading speeds and improved performance",
-        "Mobile-first, modern design",
-        "SEO and location-based optimization",
-        "Conversion-focused user experience",
-      ],
-      image: "/aivisifinal.png",
-      reverse: false,
+      title: "SEO + GEO + AI Visibility",
+      summary: "SEO, local maps, and AI engines like ChatGPT optimized simultaneously for maximum reach.",
+      image: "/s2nt.jpg",
     },
     {
       number: "02",
-      title: "Reputation Management",
-      subtitle: "Build trust. Increase bookings.",
-      body: "Your online reputation directly impacts your revenue. We help you manage and strengthen it by handling customer reviews and maintaining a consistent, professional brand presence across all platforms.",
-      features: [
-        "Monitor and respond to guest reviews",
-        "Improve ratings and online credibility",
-        "Strengthen trust with potential customers",
-        "Turn feedback into growth opportunities",
-      ],
-      image: "/repu.png",
-      reverse: true,
+      title: "AI Website Rebuild",
+      summary: "We rebuild your site on a proprietary AI foundation that outperforms anything off-the-shelf.",
+      image: "/s1nt.jpg",
     },
+    {
+      number: "03",
+      title: "Reputation Engine",
+      summary: "Authority signals, reviews, and trust infrastructure built directly into your digital presence.",
+      image: "/s3nt.png",
+    },
+  ];
+
+  const stats = [
+    { before: "37", after: "100", label: "AI Visibility" },
+    { before: "61", after: "94",  label: "Performance"  },
+    { before: "82", after: "100", label: "SEO Score"    },
+  ];
+
+  const steps = [
+    { n: "01", title: "You share your website",        body: "No lengthy briefs, no back-and-forth. Our AI does the heavy lifting." },
+    { n: "02", title: "Our AI runs a full audit",      body: "Speed, structure, SEO, accessibility, AI-readiness — every dimension analyzed in minutes." },
+    { n: "03", title: "We rebuild the infrastructure", body: "Your brand stays intact. Everything under the hood gets rebuilt — fast, modern, AI-ready." },
+    { n: "04", title: "Scores go up. Results follow.", body: "Lighthouse 90+. AI visibility maxed. Local search dominance. You get found." },
   ];
 
   return (
     <>
-      {/* ── Necessary Custom CSS (Fonts, Keyframes, SVGs) ── */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
-        /* Ticker Animation */
         @keyframes ticker {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
         }
 
-        /* Subtle noise overlay on hero */
         .noise::before {
           content: '';
           position: absolute;
@@ -127,6 +130,10 @@ export default function Page() {
           opacity: 0.035;
           pointer-events: none;
           z-index: 1;
+        }
+
+        .stat-card:hover {
+          box-shadow: 0 0 0 1px rgba(58,127,193,0.2), 0 8px 24px rgba(58,127,193,0.07);
         }
       `}</style>
 
@@ -140,36 +147,25 @@ export default function Page() {
           onMouseMove={handleMouseMove}
           className="noise group relative overflow-hidden bg-[linear-gradient(160deg,#07172a_0%,#0d2640_55%,#102e50_100%)] pt-[clamp(7rem,15vh,11rem)] pb-[clamp(12rem,25vh,18rem)]"
         >
-          {/* Static Glow orbs */}
           <div className="pointer-events-none absolute -top-[10%] -left-[8%] h-[700px] w-[700px] bg-[radial-gradient(circle,rgba(58,127,193,0.18)_0%,transparent_70%)]" />
           <div className="pointer-events-none absolute -bottom-[20%] -right-[5%] h-[600px] w-[600px] bg-[radial-gradient(circle,rgba(17,50,84,0.5)_0%,transparent_70%)]" />
 
-          {/* Interactive Cursor Spotlight */}
           <motion.div
             className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             style={{
-              background: useMotionTemplate`
-                radial-gradient(
-                  600px circle at ${mouseX}px ${mouseY}px,
-                  rgba(58, 127, 193, 0.15),
-                  transparent 80%
-                )
-              `,
+              background: useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(58,127,193,0.15), transparent 80%)`,
             }}
           />
 
-          {/* Subtle grid */}
           <div className="pointer-events-none absolute inset-0 z-[1] bg-[length:52px_52px] bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)]" />
 
           <motion.div style={{ y: heroY }} className="relative z-20">
             <div className="mx-auto max-w-[860px] px-[clamp(1rem,4vw,2rem)] text-center">
-
-              {/* Headline */}
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
-                className="mb-[1.1rem] font-['DM_Sans',sans-serif] text-5xl font-light leading-[1.08] tracking-[-0.03em] text-white pt-15 "
+                className="mb-[1.1rem] font-['DM_Sans',sans-serif] text-5xl font-light leading-[1.08] tracking-[-0.03em] text-white pt-15"
               >
                 Your AI Partner for
                 <br />
@@ -178,7 +174,6 @@ export default function Page() {
                 </span>
               </motion.h1>
 
-              {/* Subline */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -189,7 +184,6 @@ export default function Page() {
                 through strategic expansion and intelligent digital systems.
               </motion.p>
 
-              {/* CTA */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -198,7 +192,7 @@ export default function Page() {
               >
                 <a
                   href="/contact"
-                  className="flex items-center gap-2 rounded-full bg-[#ffff] px-8 py-[0.85rem] text-[0.9rem] font-semibold tracking-[0.01em] text-black no-underline transition-all duration-200 hover:-translate-y-[1px] hover:bg-white hover:shadow-[0_8px_30px_rgba(58,127,193,0.4)]"
+                  className="flex items-center gap-2 rounded-full bg-white px-8 py-[0.85rem] text-[0.9rem] font-semibold tracking-[0.01em] text-black no-underline transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_30px_rgba(58,127,193,0.4)]"
                 >
                   Book a Demo <ArrowRight />
                 </a>
@@ -208,7 +202,7 @@ export default function Page() {
         </section>
 
         {/* ══════════════════════════════════
-            VIDEO / MOCKUP CARD
+            VIDEO CARD
         ══════════════════════════════════ */}
         <section className="relative z-20 mx-auto max-w-[1060px] px-[clamp(1rem,4vw,2rem)]">
           <motion.div
@@ -217,10 +211,9 @@ export default function Page() {
             transition={{ duration: 1, delay: 0.5, ease: EASE }}
             className="relative mt-[clamp(-8rem,-15vw,-11rem)] aspect-video overflow-hidden rounded-[clamp(1rem,4vw,2rem)] bg-[#0d1f35] shadow-[0_32px_80px_rgba(7,23,42,0.35),0_0_0_1px_rgba(255,255,255,0.1)]"
           >
-            <video autoPlay loop muted playsInline className="block h-full w-full object-cover">
-              <source src="/cymvid1.mp4" type="video/mp4" />
+            <video autoPlay muted playsInline className="block h-full w-full object-cover">
+              <source src="/videomp1.mp4" type="video/mp4" />
             </video>
-            {/* Gradient vignette at bottom for polish */}
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[rgba(7,23,42,0.5)] to-transparent" />
           </motion.div>
         </section>
@@ -237,7 +230,6 @@ export default function Page() {
                   className="inline-flex items-center gap-[1.2rem] whitespace-nowrap px-[2.5rem] text-xl font-bold uppercase tracking-[0.22em] text-[#113254]"
                 >
                   {item}
-                  
                 </span>
               ))
             )}
@@ -245,164 +237,198 @@ export default function Page() {
         </section>
 
         {/* ══════════════════════════════════
-            WHY DIFFERENT
+            PROPRIETARY AI ENGINE
         ══════════════════════════════════ */}
-        <section className="mx-auto max-w-[1120px] px-[clamp(1.25rem,4vw,2rem)] py-[clamp(4rem,10vw,9rem)]">
-          <div className="grid grid-cols-1 items-start gap-[clamp(3rem,6vw,5rem)] lg:grid-cols-2">
+        <section className="bg-white px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,12vw,10rem)]">
+          <div className="mx-auto max-w-[1200px]">
 
-            {/* Left — sticky text */}
-            <Reveal>
-              <Eyebrow>Why We&apos;re Different</Eyebrow>
-              <h2 className="mb-[1.25rem] font-['DM_Sans',sans-serif] text-[clamp(2rem,4vw,3.1rem)] font-light leading-[1.15] tracking-[-0.03em] text-[#0d2640]">
-                Not just services.<br />
-                <em className="font-['DM_Sans',sans-serif] font-normal text-[#3a7fc1]">
-                  A system that evolves.
-                </em>
-              </h2>
-              <p className="max-w-[380px] text-[0.975rem] font-light leading-[1.8] text-[#6b7280]">
-                Most agencies build once and leave. We build systems that continuously
-                improve — adapting to your market, your customers, and your growth stage.
-              </p>
-            </Reveal>
-
-            {/* Right — feature card */}
-            <Reveal delay={0.15}>
-              <div className="relative overflow-hidden rounded-[1.75rem] bg-[#0d2640] p-[clamp(2rem,5vw,3rem)]">
-                {/* Glow */}
-                <div className="pointer-events-none absolute -right-[60px] -top-[60px] h-[240px] w-[240px] bg-[radial-gradient(circle,rgba(58,127,193,0.2)_0%,transparent_70%)]" />
-
-                <p className="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-[#7bafd4]/70">
-                  Proprietary Engine
-                </p>
-
-                <h3 className="mb-4 font-['DM_Sans',sans-serif] text-[1.55rem] font-normal leading-[1.25] tracking-[-0.02em] text-white">
-                  AI Optimization <em className="font-['DM_Sans',sans-serif]">Engine</em>
-                </h3>
-
-                <p className="mb-8 text-[0.875rem] font-light leading-[1.75] text-white">
-                  Our proprietary engine continuously analyzes, refines, and enhances your
-                  digital presence — improving search visibility, performance, and customer
-                  engagement while turning traffic into measurable revenue.
-                </p>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {[
-                    "Continuous performance improvement",
-                    "Adaptive search visibility",
-                    "Real-time optimization insights",
-                    "Growth-focused automation",
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-[0.6rem]">
-                      <span className="mt-[1px] flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[#3a7fc1]/20 text-[#7bafd4]">
-                        <Check />
-                      </span>
-                      <span className="text-[0.8rem] font-light leading-[1.5] text-white">
-                        {item}
-                      </span>
-                    </div>
-                  ))}
+            <Reveal className="mb-[clamp(3rem,6vw,5rem)]">
+              <div className="flex items-center gap-4">
+                <div className="inline-flex items-center gap-2.5 rounded-full border border-[#3a7fc1]/20 bg-[#e8f0f8] px-4 py-1.5 text-[0.68rem] font-bold tracking-[0.25em] uppercase text-[#3a7fc1]">
+                  OUR DIFFERENCE
                 </div>
+                <div className="h-px flex-1 bg-gradient-to-r from-[#e5e9ef] to-transparent" />
               </div>
             </Reveal>
+
+            <div className="grid grid-cols-1 gap-[clamp(3rem,8vw,7rem)] lg:grid-cols-[1fr_1fr] items-stretch">
+
+              {/* LEFT */}
+              <div className="self-start lg:sticky lg:top-[7rem]">
+                <Reveal>
+                  <h2 className="font-['DM_Sans',sans-serif] text-[clamp(2.2rem,4vw,3.4rem)] font-light leading-[1.1] tracking-[-0.04em] text-[#0d2640] mb-8">
+                    Our Very Own<br />
+                    <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#3a7fc1]">
+                      AI-powered visibility engine.
+                    </em>
+                  </h2>
+                  <p className="text-[1.05rem] font-light leading-[1.85] text-[#6b7280] mb-5">
+                    Traditional agencies use the same public tools anyone can access — generic AI writing assistants, shared templates, manual code. We operate on a <span className="text-[#0d2640] font-normal">closed, industrial-grade AI platform</span> we built ourselves.
+                  </p>
+                  <p className="text-[1.05rem] font-light leading-[1.85] text-[#6b7280] mb-10">
+                    Our engine analyzes your existing website, <span className="text-[#0d2640] font-normal">preserves your brand identity completely</span>, and rebuilds the entire technical infrastructure into a high-performance system — automatically, at a level no human team could match manually.
+                  </p>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    {stats.map((s, i) => (
+                      <Reveal key={i} delay={0.05 * i}>
+                        <div className="stat-card rounded-2xl border border-[#e5e9ef] bg-white p-5 text-center transition-all duration-300">
+                          <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[#6b7280] mb-3">{s.label}</p>
+                          <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                            <span className="text-[1rem] text-[#aab4be] line-through">{s.before}</span>
+                            <span className="text-[0.6rem] text-[#aab4be]">→</span>
+                            <span className="text-[1.8rem] font-semibold text-[#0d2640] leading-none">{s.after}</span>
+                          </div>
+                          <p className="text-[0.7rem] text-[#3a7fc1]">Lighthouse pts</p>
+                        </div>
+                      </Reveal>
+                    ))}
+                  </div>
+                </Reveal>
+              </div>
+
+              {/* RIGHT — steps */}
+              <div className="flex flex-col divide-y divide-[#e5e9ef]">
+                {steps.map((step, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 32 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.75, delay: 0.1 + i * 0.12, ease: EASE }}
+                    className="group relative flex gap-6 py-[clamp(2rem,4vw,3rem)] first:pt-0 last:pb-0"
+                  >
+                    <motion.div
+                      initial={{ scaleY: 0 }}
+                      whileInView={{ scaleY: 1 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.6, delay: 0.15 + i * 0.12, ease: EASE }}
+                      style={{ originY: 0 }}
+                      className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#3a7fc1]/40 via-[#3a7fc1]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    />
+                    <div className="flex-shrink-0 pt-1">
+                      <motion.span
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 + i * 0.12, ease: EASE }}
+                        className="block font-['DM_Sans',sans-serif] text-[0.65rem] font-bold tracking-[0.25em] text-[#3a7fc1]/50 uppercase"
+                      >
+                        {step.n}
+                      </motion.span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-['DM_Sans',sans-serif] text-[clamp(1.15rem,2vw,1.4rem)] font-light leading-[1.3] tracking-[-0.02em] text-[#0d2640] mb-3">
+                        {step.title}
+                      </h4>
+                      <p className="text-[clamp(0.9rem,1.2vw,1.0rem)] font-light leading-[1.8] text-[#6b7280]">
+                        {step.body}
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 flex items-start pt-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-4px] group-hover:translate-x-0">
+                      <svg className="w-4 h-4 text-[#3a7fc1]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+            </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════
-            SERVICES
+            SERVICES — image cards with hover
         ══════════════════════════════════ */}
-        <section className="border-y border-[#e5e9ef] bg-[#f8fafc] px-[clamp(1.25rem,4vw,2rem)] py-[clamp(4rem,10vw,9rem)]">
-          <div className="mx-auto max-w-[1120px]">
+        <section className="bg-white px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,10vw,8rem)]">
+          <div className="mx-auto max-w-[1200px]">
 
-            {/* Section header */}
-            <div className="mb-[clamp(4rem,8vw,7rem)] text-center">
-              <Reveal>
+            {/* Header */}
+            <Reveal className="mb-[clamp(3rem,6vw,5rem)] flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div>
                 <Eyebrow>Expertise</Eyebrow>
-                <h2 className="font-['DM_Sans',sans-serif] text-[clamp(2rem,4vw,3.1rem)] leading-[1.15] tracking-[-0.03em] text-[#0d2640]">
-                  Our <span className="text-[#3a7fc1] italic">Services</span>
+                <h2 className="font-['DM_Sans',sans-serif] text-[clamp(2.2rem,4vw,3.2rem)] font-light leading-[1.1] tracking-[-0.04em] text-[#0d2640]">
+                  Services <em className="not-italic text-[#3a7fc1]">We Offer</em>
                 </h2>
-              </Reveal>
-            </div>
+              </div>
+              <p className="max-w-[340px] text-[0.9rem] font-light leading-[1.75] text-[#6b7280] sm:text-right">
+                One partner covering every layer of your digital presence — from infrastructure to reputation.
+              </p>
+            </Reveal>
 
-            {/* Service rows */}
-            <div className="flex flex-col gap-[clamp(4rem,10vw,8rem)]">
-              {services.map((svc, idx) => (
-                <div
-                  key={idx}
-                  className="grid grid-cols-1 items-center gap-[clamp(3rem,6vw,5rem)] lg:grid-cols-2"
-                >
-                  {/* Image card */}
-                  <Reveal delay={0.05} x={svc.reverse ? 30 : -30} className={svc.reverse ? "lg:order-last" : ""}>
-                    <div className="aspect-[4/3] overflow-hidden rounded-[2rem] border border-[#e5e9ef] bg-white shadow-[0_4px_24px_rgba(7,23,42,0.06)]">
+            {/* Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {services.map((svc, i) => (
+                <Reveal key={i} delay={i * 0.1} y={30} className="h-full">
+                  <a
+                    href="/services"
+                    className="group relative block h-[520px] rounded-[1.5rem] overflow-hidden cursor-pointer"
+                  >
+                    {/* Background image */}
+                    <div className="absolute inset-0">
                       <img
                         src={svc.image}
                         alt={svc.title}
-                        className="block h-full w-full object-cover"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                     </div>
-                  </Reveal>
 
-                  {/* Text */}
-                  <Reveal delay={0.1} x={svc.reverse ? -30 : 30}>
-                    <div>
-                      <span className="mb-[0.8rem] block font-['DM_Sans',sans-serif] text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#3a7fc1]/60">
-                        {svc.number}
-                      </span>
+                    {/* Base gradient — stronger at bottom so title always reads */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#07172a]/95 via-[#07172a]/30 to-transparent" />
 
-                      <h3 className="mb-[0.6rem] font-['DM_Sans',sans-serif] text-[clamp(1.6rem,3vw,2.2rem)] font-light leading-[1.2] tracking-[-0.025em] text-[#0d2640]">
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-[#07172a]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Number — top left */}
+                    <div className="absolute top-6 left-6 text-[0.65rem] font-bold tracking-[0.25em] uppercase text-white/40">
+                      {svc.number}
+                    </div>
+
+                    {/* Content — sits at bottom, shifts up on hover to make room for summary */}
+                    <div className="absolute bottom-0 left-0 right-0 p-7 flex flex-col transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
+
+                      {/* Title — always visible, centered vertically in lower third */}
+                      <h3 className="font-['DM_Sans',sans-serif] text-[1.6rem] font-light leading-[1.15] tracking-[-0.025em] text-white">
                         {svc.title}
                       </h3>
 
-                      <p className="mb-[1.25rem] text-[0.875rem] font-semibold tracking-[0.01em] text-[#3a7fc1]">
-                        {svc.subtitle}
-                      </p>
-
-                      <p className="mb-8 text-[0.925rem] font-light leading-[1.8] text-[#6b7280]">
-                        {svc.body}
-                      </p>
-
-                      <div className="flex flex-col gap-3">
-                        {svc.features.map((f, fi) => (
-                          <div key={fi} className="flex items-center gap-3">
-                            <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[#e8f0f8] text-[#113254]">
-                              <Check />
-                            </span>
-                            <span className="text-[0.875rem] font-normal text-[#1a1a2e]">{f}</span>
-                          </div>
-                        ))}
+                      {/* Summary + button — hidden until hover, slides up from below title */}
+                      <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-out">
+                        <div className="overflow-hidden">
+                          <p className="text-[0.825rem] font-light leading-[1.65] text-white/60 mt-3 mb-5 max-w-[280px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150">
+                            {svc.summary}
+                          </p>
+                          <span className="inline-flex items-center gap-2 text-[0.75rem] font-semibold tracking-[0.12em] uppercase text-white bg-[#3a7fc1] px-4 py-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
+                            Learn more
+                            <ArrowUpRight />
+                          </span>
+                        </div>
                       </div>
+
                     </div>
-                  </Reveal>
-                </div>
+
+                    {/* Accent border on hover */}
+                    <div className="absolute inset-0 rounded-[1.5rem] ring-1 ring-inset ring-white/0 group-hover:ring-white/10 transition-all duration-500" />
+                  </a>
+                </Reveal>
               ))}
             </div>
+
+            {/* Bottom CTA */}
+            <Reveal delay={0.3} className="mt-12 text-center">
+              <a
+                href="/services"
+                className="inline-flex items-center gap-2.5 text-[0.8rem] font-semibold tracking-[0.15em] uppercase text-[#3a7fc1] border border-[#3a7fc1]/30 px-6 py-3 rounded-full hover:bg-[#3a7fc1] hover:text-white transition-all duration-300"
+              >
+                View all services
+                <ArrowUpRight />
+              </a>
+            </Reveal>
+
           </div>
         </section>
 
-        {/* ══════════════════════════════════
-            MISSION
-        ══════════════════════════════════
-        <section className="relative overflow-hidden bg-[#0d2640] px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,10vw,9rem)]">
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle,rgba(58,127,193,0.12)_0%,transparent_65%)]" />
-          
-          <div className="relative z-10 mx-auto max-w-[760px] text-center">
-            <Reveal>
-              <Eyebrow dark>Our Mission</Eyebrow>
-              <h2 className="mb-6 font-['Instrument_Serif',Georgia,serif] text-[clamp(1.9rem,4vw,3rem)] font-light leading-[1.2] tracking-[-0.03em] italic text-white">
-                Simplicity Wins Over Complexity{" "}
-                <br/>
-                <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#ffff]">
-                  Every. Single. Time
-                </em>
-              </h2>
-              <p className="mx-auto mb-12 max-w-[540px] text-[0.975rem] font-light leading-[1.85] text-white/45">
-                Our mission is to simplify how businesses operate online — combining
-                visibility, automation, and experience into one seamless system that
-                drives sustainable, compounding growth.
-              </p>
-            </Reveal>
-          </div>
-        </section>
- */}
       </div>
     </>
   );
