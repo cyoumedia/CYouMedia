@@ -269,21 +269,36 @@ export default function Page() {
                     Our engine analyzes your existing website, <span className="text-[#0d2640] font-normal">preserves your brand identity completely</span>, and rebuilds the entire technical infrastructure into a high-performance system — automatically, at a level no human team could match manually.
                   </p>
 
-                  <div className="grid grid-cols-3 gap-4">
-                    {stats.map((s, i) => (
-                      <Reveal key={i} delay={0.05 * i}>
-                        <div className="stat-card rounded-2xl border border-[#e5e9ef] bg-white p-5 text-center transition-all duration-300">
-                          <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-[#6b7280] mb-3">{s.label}</p>
-                          <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                            <span className="text-[1rem] text-[#aab4be] line-through">{s.before}</span>
-                            <span className="text-[0.6rem] text-[#aab4be]">→</span>
-                            <span className="text-[1.8rem] font-semibold text-[#0d2640] leading-none">{s.after}</span>
-                          </div>
-                          <p className="text-[0.7rem] text-[#3a7fc1]">Lighthouse pts</p>
-                        </div>
-                      </Reveal>
-                    ))}
-                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {stats.map((s, i) => (
+    <Reveal key={i} delay={0.05 * i}>
+      <div className="stat-card rounded-2xl border border-[#e5e9ef] bg-white p-4 sm:p-5 text-center transition-all duration-300">
+        
+        <p className="text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.18em] text-[#6b7280] mb-2 sm:mb-3">
+          {s.label}
+        </p>
+
+        <div className="flex items-baseline justify-center gap-1 sm:gap-1.5 mb-1">
+          <span className="text-[0.85rem] sm:text-[1rem] text-[#aab4be] line-through">
+            {s.before}
+          </span>
+
+          <span className="text-[0.55rem] sm:text-[0.6rem] text-[#aab4be]">
+            →
+          </span>
+
+          <span className="text-[1.5rem] sm:text-[1.8rem] font-semibold text-[#0d2640] leading-none">
+            {s.after}
+          </span>
+        </div>
+
+        <p className="text-[0.65rem] sm:text-[0.7rem] text-[#3a7fc1]">
+          Lighthouse pts
+        </p>
+      </div>
+    </Reveal>
+  ))}
+</div>
                 </Reveal>
               </div>
 
