@@ -83,13 +83,13 @@ export default function Page() {
       number: "01",
       title: "SEO + GEO + AI Visibility",
       summary: "SEO, local maps, and AI engines like ChatGPT optimized simultaneously for maximum reach.",
-      image: "/s2nt.jpg",
+      image: "/service1.png",
     },
     {
       number: "02",
       title: "AI Website Rebuild",
       summary: "We rebuild your site on a proprietary AI foundation that outperforms anything off-the-shelf.",
-      image: "/s1nt.jpg",
+      image: "/service2.png",
     },
     {
       number: "03",
@@ -212,7 +212,7 @@ export default function Page() {
             className="relative mt-[clamp(-8rem,-15vw,-11rem)] aspect-video overflow-hidden rounded-[clamp(1rem,4vw,2rem)] bg-[#0d1f35] shadow-[0_32px_80px_rgba(7,23,42,0.35),0_0_0_1px_rgba(255,255,255,0.1)]"
           >
             <video autoPlay muted playsInline className="block h-full w-full object-cover">
-              <source src="/videomp1.mp4" type="video/mp4" />
+              <source src="/FINALCYM.mp4" type="video/mp4" />
             </video>
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[rgba(7,23,42,0.5)] to-transparent" />
           </motion.div>

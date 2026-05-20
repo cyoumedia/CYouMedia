@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 /* ─── ICONS ─── */
 const ArrowRight = () => (
@@ -79,10 +80,55 @@ export default function ContactPage() {
     "Full Partnership"
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formState);
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+
+  formData.append(
+    "access_key",
+    "357c54b1-bb84-4f71-bfc7-d2267faa4abd"
+  );
+
+  formData.append("name", formState.fullName);
+  formData.append("company", formState.company);
+  formData.append("email", formState.businessEmail);
+  formData.append("message", formState.message);
+
+  formData.append(
+    "subject",
+    "New CYouMedia Contact Form Submission"
+  );
+
+  try {
+    const response = await fetch(
+      "https://api.web3forms.com/submit",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success("Message sent successfully!");
+
+      setFormState({
+        fullName: "",
+        company: "",
+        businessEmail: "",
+        message: ""
+      });
+    } else {
+      console.log(data);
+      toast.error("Something went wrong.");
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to send.");
+  }
+};
 
   const handleChange = (e) => {
     setFormState({
@@ -91,14 +137,12 @@ export default function ContactPage() {
     });
   };
 
-  const handleInterestSelect = (interest) => {
-    setFormState({ ...formState, interest });
-  };
 
   const locations = ["Sweden", "London", "USA", "Singapore", "Sri Lanka"];
 
   return (
     <>
+    <Toaster />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
@@ -260,41 +304,8 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  {/* Row 3: Interests (Chips) */}
-                  <div>
-                    <label className="form-label mb-3">I'm Interested In</label>
-                    <div className="flex flex-wrap gap-3">
-                      {interests.map((interest) => {
-                        const isSelected = formState.interest === interest;
-                        return (
-                          <button
-                            key={interest}
-                            type="button"
-                            onClick={() => handleInterestSelect(interest)}
-                            className={`relative flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.85rem] font-medium transition-all duration-300 ${
-                              isSelected
-                                ? "bg-[#0d2640] text-white shadow-[0_4px_12px_rgba(13,38,64,0.15)]"
-                                : "bg-white text-[#64748b] border border-[#e2e8f0] hover:border-[#cbd5e1] hover:bg-[#f8fafc]"
-                            }`}
-                          >
-                            {/* Conditional Check Icon */}
-                            {isSelected ? (
-                              <motion.span
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                className="flex items-center justify-center"
-                              >
-                                <CheckIcon />
-                              </motion.span>
-                            ) : (
-                              <span className="h-3.5 w-3.5 rounded-sm border border-[#cbd5e1]" />
-                            )}
-                            {interest}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  
+                  
 
                   {/* Row 4: Message */}
                   <div>

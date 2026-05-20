@@ -210,7 +210,7 @@ export default function AboutPage() {
                 <span className="italic text-[#7bafd4]">Every. Single. Time"</span>
               </p>
               <p className="mx-auto mt-12 max-w-[640px] text-[0.975rem] font-light leading-[1.85] text-white/45">
-                We built CYouMedia because we believed businesses deserved more than generic templates and recycled strategies. Our mission is to make every business we touch impossible to ignore online — combining AI infrastructure, visibility engineering, and reputation management into one seamless system that compounds over time.
+                We built CYouMedia because we believed businesses deserved more than generic templates and recycled strategies. Our mission is to make every business we touch impossible to ignore online combining AI infrastructure, visibility engineering, and reputation management into one seamless system that compounds over time.
               </p>
             </Reveal>
           </div>
