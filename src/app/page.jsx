@@ -1,22 +1,59 @@
 "use client";
 
-import { motion, useScroll, useTransform, useMotionValue, useMotionTemplate } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useMotionTemplate,
+} from "framer-motion";
 import { useState, useRef } from "react";
 
 /* ─── ICONS ─── */
 const ArrowRight = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M12 5l7 7-7 7" />
+  <svg
+    className="w-4 h-4"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M5 12h14M12 5l7 7-7 7"
+    />
   </svg>
 );
 const ArrowUpRight = () => (
-  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M7 7h10v10" />
+  <svg
+    width="14"
+    height="14"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M7 17L17 7M7 7h10v10"
+    />
   </svg>
 );
 const Check = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  <svg
+    className="w-4 h-4"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M5 13l4 4L19 7"
+    />
   </svg>
 );
 
@@ -43,7 +80,9 @@ const Eyebrow = ({ children, dark = false }) => (
       dark ? "text-[#7bafd4]" : "text-[#113254]"
     }`}
   >
-    <span className={`w-5 h-px ${dark ? "bg-[#7bafd4]/50" : "bg-[#113254]/40"}`} />
+    <span
+      className={`w-5 h-px ${dark ? "bg-[#7bafd4]/50" : "bg-[#113254]/40"}`}
+    />
     {children}
   </div>
 );
@@ -82,34 +121,53 @@ export default function Page() {
     {
       number: "01",
       title: "SEO + GEO + AI Visibility",
-      summary: "SEO, local maps, and AI engines like ChatGPT optimized simultaneously for maximum reach.",
+      summary:
+        "SEO, local maps, and AI engines like ChatGPT optimized simultaneously for maximum reach.",
       image: "/service1.png",
     },
     {
       number: "02",
       title: "AI Website Rebuild",
-      summary: "We rebuild your site on a proprietary AI foundation that outperforms anything off-the-shelf.",
+      summary:
+        "We rebuild your site on a proprietary AI foundation that outperforms anything off-the-shelf.",
       image: "/service2.png",
     },
     {
       number: "03",
       title: "Reputation Engine",
-      summary: "Authority signals, reviews, and trust infrastructure built directly into your digital presence.",
+      summary:
+        "Authority signals, reviews, and trust infrastructure built directly into your digital presence.",
       image: "/s3nt.png",
     },
   ];
 
   const stats = [
     { before: "37", after: "100", label: "AI Visibility" },
-    { before: "61", after: "94",  label: "Performance"  },
-    { before: "82", after: "100", label: "SEO Score"    },
+    { before: "61", after: "94", label: "Performance" },
+    { before: "82", after: "100", label: "SEO Score" },
   ];
 
   const steps = [
-    { n: "01", title: "You share your website",        body: "No lengthy briefs, no back-and-forth. Our AI does the heavy lifting." },
-    { n: "02", title: "Our AI runs a full audit",      body: "Speed, structure, SEO, accessibility, AI-readiness — every dimension analyzed in minutes." },
-    { n: "03", title: "We rebuild the infrastructure", body: "Your brand stays intact. Everything under the hood gets rebuilt — fast, modern, AI-ready." },
-    { n: "04", title: "Scores go up. Results follow.", body: "Lighthouse 90+. AI visibility maxed. Local search dominance. You get found." },
+    {
+      n: "01",
+      title: "You share your website",
+      body: "No lengthy briefs, no back-and-forth. Our AI does the heavy lifting.",
+    },
+    {
+      n: "02",
+      title: "Our AI runs a full audit",
+      body: "Speed, structure, SEO, accessibility, AI-readiness — every dimension analyzed in minutes.",
+    },
+    {
+      n: "03",
+      title: "We rebuild the infrastructure",
+      body: "Your brand stays intact. Everything under the hood gets rebuilt — fast, modern, AI-ready.",
+    },
+    {
+      n: "04",
+      title: "Scores go up. Results follow.",
+      body: "Lighthouse 90+. AI visibility maxed. Local search dominance. You get found.",
+    },
   ];
 
   return (
@@ -138,7 +196,6 @@ export default function Page() {
       `}</style>
 
       <div className="min-h-screen bg-white font-['DM_Sans',sans-serif]">
-
         {/* ══════════════════════════════════
             HERO
         ══════════════════════════════════ */}
@@ -211,7 +268,12 @@ export default function Page() {
             transition={{ duration: 1, delay: 0.5, ease: EASE }}
             className="relative mt-[clamp(-8rem,-15vw,-11rem)] aspect-video overflow-hidden rounded-[clamp(1rem,4vw,2rem)] bg-[#0d1f35] shadow-[0_32px_80px_rgba(7,23,42,0.35),0_0_0_1px_rgba(255,255,255,0.1)]"
           >
-            <video autoPlay muted playsInline className="block h-full w-full object-cover">
+            <video
+              autoPlay
+              muted
+              playsInline
+              className="block h-full w-full object-cover"
+            >
               <source src="/cymfinal2.mp4" type="video/mp4" />
             </video>
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-[rgba(7,23,42,0.5)] to-transparent" />
@@ -231,144 +293,184 @@ export default function Page() {
                 >
                   {item}
                 </span>
-              ))
+              )),
             )}
           </div>
         </section>
 
         {/* ══════════════════════════════════
-            PROPRIETARY AI ENGINE
-        ══════════════════════════════════ */}
-        <section className="bg-white px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,12vw,10rem)]">
-          <div className="mx-auto max-w-[1200px]">
-
-            <Reveal className="mb-[clamp(3rem,6vw,5rem)]">
-              <div className="flex items-center gap-4">
-                <div className="inline-flex items-center gap-2.5 rounded-full border border-[#3a7fc1]/20 bg-[#e8f0f8] px-4 py-1.5 text-[0.68rem] font-bold tracking-[0.25em] uppercase text-[#3a7fc1]">
-                  OUR DIFFERENCE
-                </div>
-                <div className="h-px flex-1 bg-gradient-to-r from-[#e5e9ef] to-transparent" />
-              </div>
-            </Reveal>
-
-            <div className="grid grid-cols-1 gap-[clamp(3rem,8vw,7rem)] lg:grid-cols-[1fr_1fr] items-stretch">
-
-              {/* LEFT */}
-              <div className="self-start lg:sticky lg:top-[7rem]">
-                <Reveal>
-                  <h2 className="font-['DM_Sans',sans-serif] text-[clamp(2.2rem,4vw,3.4rem)] font-light leading-[1.1] tracking-[-0.04em] text-[#0d2640] mb-8">
-                    Our Very Own<br />
-                    <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#3a7fc1]">
-                      AI-powered visibility engine.
-                    </em>
-                  </h2>
-                  <p className="text-[1.05rem] font-light leading-[1.85] text-[#6b7280] mb-5">
-                    Traditional agencies use the same public tools anyone can access — generic AI writing assistants, shared templates, manual code. We operate on a <span className="text-[#0d2640] font-normal">closed, industrial-grade AI platform</span> we built ourselves.
-                  </p>
-                  <p className="text-[1.05rem] font-light leading-[1.85] text-[#6b7280] mb-10">
-                    Our engine analyzes your existing website, <span className="text-[#0d2640] font-normal">preserves your brand identity completely</span>, and rebuilds the entire technical infrastructure into a high-performance system — automatically, at a level no human team could match manually.
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-  {stats.map((s, i) => (
-    <Reveal key={i} delay={0.05 * i}>
-      <div className="stat-card rounded-2xl border border-[#e5e9ef] bg-white p-4 sm:p-5 text-center transition-all duration-300">
-        
-        <p className="text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.18em] text-[#6b7280] mb-2 sm:mb-3">
-          {s.label}
-        </p>
-
-        <div className="flex items-baseline justify-center gap-1 sm:gap-1.5 mb-1">
-          <span className="text-[0.85rem] sm:text-[1rem] text-[#aab4be] line-through">
-            {s.before}
-          </span>
-
-          <span className="text-[0.55rem] sm:text-[0.6rem] text-[#aab4be]">
-            →
-          </span>
-
-          <span className="text-[1.5rem] sm:text-[1.8rem] font-semibold text-[#0d2640] leading-none">
-            {s.after}
-          </span>
+    PROPRIETARY AI ENGINE
+══════════════════════════════════ */}
+<section className="bg-white px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,12vw,10rem)]">
+  <div className="mx-auto max-w-[1200px]">
+    <Reveal className="mb-[clamp(3rem,6vw,5rem)]">
+      <div className="flex items-center gap-4">
+        <div className="inline-flex items-center gap-2.5 rounded-full border border-[#3a7fc1]/20 bg-[#e8f0f8] px-4 py-1.5 text-[0.68rem] font-bold tracking-[0.25em] uppercase text-[#3a7fc1]">
+          AI BRAIN
         </div>
-
-        <p className="text-[0.65rem] sm:text-[0.7rem] text-[#3a7fc1]">
-          Lighthouse pts
-        </p>
+        <div className="h-px flex-1 bg-gradient-to-r from-[#e5e9ef] to-transparent" />
       </div>
     </Reveal>
-  ))}
-</div>
-                </Reveal>
-              </div>
 
-              {/* RIGHT — steps */}
-              <div className="flex flex-col divide-y divide-[#e5e9ef]">
-                {steps.map((step, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 32 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{ duration: 0.75, delay: 0.1 + i * 0.12, ease: EASE }}
-                    className="group relative flex gap-6 py-[clamp(2rem,4vw,3rem)] first:pt-0 last:pb-0"
-                  >
-                    <motion.div
-                      initial={{ scaleY: 0 }}
-                      whileInView={{ scaleY: 1 }}
-                      viewport={{ once: true, margin: "-60px" }}
-                      transition={{ duration: 0.6, delay: 0.15 + i * 0.12, ease: EASE }}
-                      style={{ originY: 0 }}
-                      className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#3a7fc1]/40 via-[#3a7fc1]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    />
-                    <div className="flex-shrink-0 pt-1">
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.2 + i * 0.12, ease: EASE }}
-                        className="block font-['DM_Sans',sans-serif] text-[0.65rem] font-bold tracking-[0.25em] text-[#3a7fc1]/50 uppercase"
-                      >
-                        {step.n}
-                      </motion.span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-['DM_Sans',sans-serif] text-[clamp(1.15rem,2vw,1.4rem)] font-light leading-[1.3] tracking-[-0.02em] text-[#0d2640] mb-3">
-                        {step.title}
-                      </h4>
-                      <p className="text-[clamp(0.9rem,1.2vw,1.0rem)] font-light leading-[1.8] text-[#6b7280]">
-                        {step.body}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0 flex items-start pt-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-4px] group-hover:translate-x-0">
-                      <svg className="w-4 h-4 text-[#3a7fc1]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+    <div className="grid grid-cols-1 gap-[clamp(3rem,8vw,7rem)] lg:grid-cols-[1fr_1fr] items-stretch">
+      {/* LEFT */}
+      <div className="self-start lg:sticky lg:top-[7rem]">
+        <Reveal>
+          <h2 className="font-['DM_Sans',sans-serif] text-[clamp(2.2rem,4vw,3.4rem)] font-light leading-[1.1] tracking-[-0.04em] text-[#0d2640] mb-8">
+            Our Very Own
+            <br />
+            <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#3a7fc1]">
+              AI-powered visibility engine.
+            </em>
+          </h2>
+          <p className="text-[1.05rem] font-light leading-[1.85] text-[#6b7280] mb-5">
+            Traditional agencies use the same public tools anyone can
+            access — generic AI writing assistants, shared templates,
+            manual code. We operate on a{" "}
+            <span className="text-[#0d2640] font-normal">
+              closed, industrial-grade AI platform
+            </span>{" "}
+            we built ourselves.
+          </p>
+          <p className="text-[1.05rem] font-light leading-[1.85] text-[#6b7280] mb-10">
+            Our engine analyzes your existing website,{" "}
+            <span className="text-[#0d2640] font-normal">
+              preserves your brand identity completely
+            </span>
+            , and rebuilds the entire technical infrastructure into a
+            high-performance system — automatically, at a level no human
+            team could match manually.
+          </p>
 
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {stats.map((s, i) => (
+              <Reveal key={i} delay={0.05 * i}>
+                <div className="stat-card rounded-2xl border border-[#e5e9ef] bg-white p-4 sm:p-5 text-center transition-all duration-300">
+                  <p className="text-[0.55rem] sm:text-[0.6rem] font-bold uppercase tracking-[0.18em] text-[#6b7280] mb-2 sm:mb-3">
+                    {s.label}
+                  </p>
+
+                  <div className="flex items-baseline justify-center gap-1 sm:gap-1.5 mb-1">
+                    <span className="text-[0.85rem] sm:text-[1rem] text-[#aab4be] line-through">
+                      {s.before}
+                    </span>
+
+                    <span className="text-[0.55rem] sm:text-[0.6rem] text-[#aab4be]">
+                      →
+                    </span>
+
+                    <span className="text-[1.5rem] sm:text-[1.8rem] font-semibold text-[#0d2640] leading-none">
+                      {s.after}
+                    </span>
+                  </div>
+
+                  <p className="text-[0.65rem] sm:text-[0.7rem] text-[#3a7fc1]">
+                    Lighthouse pts
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
-        </section>
+        </Reveal>
+      </div>
+
+      {/* RIGHT — steps */}
+      <div className="flex flex-col">
+
+        {/* HOW WE OPERATE header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="mb-[clamp(2rem,4vw,3rem)]"
+        >
+          <Eyebrow>How We Operate</Eyebrow>
+          <h3 className="font-['DM_Sans',sans-serif] text-[clamp(1.5rem,2.5vw,2rem)] font-light leading-[1.15] tracking-[-0.03em] text-[#0d2640]">
+            A process built for{" "}
+            <em className="font-['Instrument_Serif',Georgia,serif] font-normal italic text-[#3a7fc1]">
+              precision.
+            </em>
+          </h3>
+        </motion.div>
+
+        <div className="flex flex-col divide-y divide-[#e5e9ef]">
+          {steps.map((step, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: 32 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{
+                duration: 0.75,
+                delay: 0.1 + i * 0.12,
+                ease: EASE,
+              }}
+              className="group relative flex gap-6 py-[clamp(2rem,4vw,3rem)] first:pt-0 last:pb-0"
+            >
+              <div className="flex-shrink-0 pt-1">
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.2 + i * 0.12,
+                    ease: EASE,
+                  }}
+                  className="block font-['DM_Sans',sans-serif] text-[0.65rem] font-bold tracking-[0.25em] text-[#3a7fc1]/50 uppercase"
+                >
+                  {step.n}
+                </motion.span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-['DM_Sans',sans-serif] text-[clamp(1.15rem,2vw,1.4rem)] font-light leading-[1.3] tracking-[-0.02em] text-[#0d2640] mb-3">
+                  {step.title}
+                </h4>
+                <p className="text-[clamp(0.9rem,1.2vw,1.0rem)] font-light leading-[1.8] text-[#6b7280]">
+                  {step.body}
+                </p>
+              </div>
+              <div className="flex-shrink-0 flex items-start pt-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-4px] group-hover:translate-x-0">
+                <svg
+                  className="w-4 h-4 text-[#3a7fc1]/40"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M5 12h14M12 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* ══════════════════════════════════
             SERVICES — image cards with hover
         ══════════════════════════════════ */}
         <section className="bg-white px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,10vw,8rem)]">
           <div className="mx-auto max-w-[1200px]">
-
             {/* Header */}
             <Reveal className="mb-[clamp(3rem,6vw,5rem)] flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
                 <Eyebrow>Expertise</Eyebrow>
                 <h2 className="font-['DM_Sans',sans-serif] text-[clamp(2.2rem,4vw,3.2rem)] font-light leading-[1.1] tracking-[-0.04em] text-[#0d2640]">
-                  Services <em className="not-italic text-[#3a7fc1]">We Offer</em>
+                  Services{" "}
+                  <em className="not-italic text-[#3a7fc1]">We Offer</em>
                 </h2>
               </div>
               <p className="max-w-[340px] text-[0.9rem] font-light leading-[1.75] text-[#6b7280] sm:text-right">
-                One partner covering every layer of your digital presence — from infrastructure to reputation.
+                One partner covering every layer of your digital presence — from
+                infrastructure to reputation.
               </p>
             </Reveal>
 
@@ -402,7 +504,6 @@ export default function Page() {
 
                     {/* Content — sits at bottom, shifts up on hover to make room for summary */}
                     <div className="absolute bottom-0 left-0 right-0 p-7 flex flex-col transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
-
                       {/* Title — always visible, centered vertically in lower third */}
                       <h3 className="font-['DM_Sans',sans-serif] text-[1.6rem] font-light leading-[1.15] tracking-[-0.025em] text-white">
                         {svc.title}
@@ -420,7 +521,6 @@ export default function Page() {
                           </span>
                         </div>
                       </div>
-
                     </div>
 
                     {/* Accent border on hover */}
@@ -440,10 +540,8 @@ export default function Page() {
                 <ArrowUpRight />
               </a>
             </Reveal>
-
           </div>
         </section>
-
       </div>
     </>
   );
