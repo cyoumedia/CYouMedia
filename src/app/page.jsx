@@ -434,7 +434,7 @@ export default function HomePage() {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          background: #123356;
+          background: #3980C1;
           color: white;
           font-weight: 600;
           font-size: 0.9rem;
@@ -934,12 +934,6 @@ export default function HomePage() {
                       </div>
                     );
                   })}
-                </div>
-
-                <div className="mt-8 flex justify-center">
-                  <a href="/services" className="cta-btn">
-                    Explore Services <ArrowRight />
-                  </a>
                 </div>
               </div>
             </Reveal>
