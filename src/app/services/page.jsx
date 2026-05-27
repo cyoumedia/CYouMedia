@@ -66,7 +66,7 @@ const SEOGEODemo = () => {
         <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
         <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
         <div className="ml-3 flex-1 bg-white/5 rounded-md px-3 py-1 text-[11px] text-white/30 font-mono">
-          best plumber in london
+          best car service center in london
         </div>
       </div>
 
@@ -96,19 +96,19 @@ const SEOGEODemo = () => {
               <div className="space-y-3">
                 {[
                   {
-                    title: "Top 10 Plumbers in London 2024 | Checkatrade",
-                    url: "checkatrade.com",
-                    desc: "Compare reviews from 340+ plumbers near you...",
+                    title: "Top 10 Car Service Centers in London 2024 | Autotrader",
+                    url: "autotrader.co.uk",
+                    desc: "Compare reviews from 280+ car service centers near you...",
                   },
                   {
-                    title: "Emergency Plumber London | Rated People",
-                    url: "ratedpeople.com",
-                    desc: "Get quotes from local plumbers. 24/7 available...",
+                    title: "Mobile Mechanic & Car Repair London | Whocanfixmycar",
+                    url: "whocanfixmycar.com",
+                    desc: "Book car servicing, brakes & MOT repair online. 24/7 quotes...",
                   },
                   {
-                    title: "Best Plumbers London - MyBuilder.com",
-                    url: "mybuilder.com",
-                    desc: "Post your job and get responses from local...",
+                    title: "Best Car Mechanics London - Yell.com",
+                    url: "yell.com",
+                    desc: "Find local car servicing and garage specialists near you...",
                   },
                 ].map((r, i) => (
                   <div
@@ -179,13 +179,13 @@ const SEOGEODemo = () => {
               </div>
               <div className="rounded-xl border border-[#3a7fc1]/30 bg-[#3a7fc1]/8 p-4">
                 <p className="text-[13px] text-white/80 leading-[1.7]">
-                  Based on verified reviews, fast response times, and trusted
+                  Based on verified reviews, fast diagnostics, and trusted
                   reputation in London, I recommend{" "}
                   <span className="font-semibold text-white bg-[#3a7fc1]/30 px-1.5 py-0.5 rounded">
-                    Swift Fix Plumbing
+                    Apex Auto Care
                   </span>{" "}
-                  — consistently recognised for emergency callouts, transparent
-                  pricing, and 5-star customer service across central London.
+                  — consistently recognised for same-day diagnostics, transparent
+                  upfront pricing, and certified manufacturer-approved servicing across central London.
                 </p>
                 <div className="mt-3 flex items-center gap-1.5 text-[#7bafd4]">
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -470,7 +470,7 @@ const ReputationDemo = () => {
       icon: "✓",
       label: "Customer visits",
       color: "#7bafd4",
-      detail: "John books a plumber via your site",
+      detail: "John books a car service via your site",
     },
     {
       icon: "📱",
@@ -565,7 +565,7 @@ const ReputationDemo = () => {
             {
               name: "Mike T.",
               stars: 5,
-              text: "Fixed our boiler in 30 mins. Brilliant!",
+              text: "Serviced my car in 30 mins. Brilliant!",
               platform: "Google",
               time: "1d ago",
               replied: true,
@@ -627,7 +627,7 @@ const SocialDemo = () => {
       platform: "Instagram",
       status: "posted",
       content:
-        "🔧 Boiler acting up? Here's how to spot the 3 warning signs before it breaks down completely...",
+        "🚗 Engine light on? Here's how to spot the 3 critical warning signs before it leads to a breakdown...",
     },
     {
       day: "Wed",
@@ -764,13 +764,13 @@ const services = [
         {
           icon: <Search className="w-4 h-4" />,
           title: "SEO (Search Engine Optimisation)",
-          body: "This is what helps you appear in Google when someone searches 'plumber near me'. You show up in a list of 10+ results alongside all your competitors. The customer still has to pick.",
+          body: "This is what helps you appear in Google when someone searches 'car service center near me'. You show up in a list of 10+ results alongside all your competitors. The customer still has to pick.",
           color: "bg-gray-50 border-gray-200",
         },
         {
           icon: <Bot className="w-4 h-4 text-[#3a7fc1]" />,
           title: "GEO (Generative Engine Optimisation) — the new era",
-          body: "When someone asks ChatGPT 'What's the best plumber in London?', the AI doesn't show a list — it names one business. GEO is how we make that business yours. No list. No competition. Just a direct recommendation.",
+          body: "When someone asks ChatGPT 'What's the best car service center in London?', the AI doesn't show a list — it names one business. GEO is how we make that business yours. No list. No competition. Just a direct recommendation.",
           color: "bg-[#f0f7ff] border-[#3a7fc1]/30",
           featured: true,
         },
