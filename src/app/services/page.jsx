@@ -1,27 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-/* ─── ICONS ─── */
-const ArrowRight = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M12 5l7 7-7 7" />
-  </svg>
-);
-const Check = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-  </svg>
-);
+import { Bot, Search, Globe, Server, Vote, Star, Zap, ShieldCheck, Target, ArrowRight, CheckCircle2, ChevronRight, Activity, Cpu } from "lucide-react";
+import { useState } from "react";
 
 const EASE = [0.16, 1, 0.3, 1];
 
-const Reveal = ({ children, delay = 0, className = "", x = 0, y = 24 }) => (
+const Reveal = ({ children, delay = 0, className = "", x = 0, y = 30 }) => (
   <motion.div
     initial={{ opacity: 0, y, x }}
     whileInView={{ opacity: 1, y: 0, x: 0 }}
-    viewport={{ once: true, margin: "-80px" }}
-    transition={{ duration: 0.9, delay, ease: EASE }}
+    viewport={{ once: true, margin: "-40px" }}
+    transition={{ duration: 0.8, delay, ease: EASE }}
     className={className}
   >
     {children}
@@ -30,7 +20,7 @@ const Reveal = ({ children, delay = 0, className = "", x = 0, y = 24 }) => (
 
 const Eyebrow = ({ children, dark = false }) => (
   <div
-    className={`inline-flex items-center gap-2.5 text-[10px] font-bold tracking-[0.3em] uppercase mb-6 ${
+    className={`inline-flex items-center gap-2.5 text-[10px] font-bold tracking-[0.25em] uppercase mb-6 ${
       dark ? "text-[#7bafd4]" : "text-[#3a7fc1]"
     }`}
   >
@@ -42,192 +32,382 @@ const Eyebrow = ({ children, dark = false }) => (
 const detailedServices = [
   {
     number: "01",
-    eyebrow: "Core Service",
-    title: "SEO + GEO + AI Visibility",
-    subtitle: "Get found on Google, on maps, and inside AI engines — simultaneously.",
-    description: "Search has split into three lanes: traditional Google search, local map results, and AI answer engines like ChatGPT, Perplexity, and Gemini. We optimize your business for all three at once — so no matter where your customers are searching, you're the answer they find.",
+    tag: "GEO · AI Visibility",
+    title: "GEO + SEO + AI Visibility",
+    subtitle: "Command the search engines of tomorrow.",
+    description: "Search has fundamentally fractured. Millions of users are bypassing traditional search entirely in favor of AI-powered conversational platforms. We optimize your brand positioning, technical architecture, and semantic authority so platforms like ChatGPT, Gemini, and Claude recommend your business by name.",
     image: "/geo.png",
-    reverse: false,
+    accent: "from-[#113256] to-[#3a7fc1]",
+    visibilitySignals: [
+      "JSON-LD",
+      "Meta tags",
+      "Semantic HTML",
+      "Alt text",
+      "Internal linking",
+      "Text-to-code ratio",
+      "Mobile viewport",
+      "Robots.txt",
+      "XML sitemap"
+    ],
     deepDives: [
       {
-        title: "Algorithmic Local SEO",
-        body: "We optimize your site architecture for location-based intent, using AI to continuously refine your structured data so you rank exactly where nearby customers are looking.",
-      },
-      {
         title: "AI Engine Optimization (GEO)",
-        body: "ChatGPT and Perplexity answer questions from their own indexes. We structure your content, metadata, and schema so AI engines quote and recommend your business over competitors.",
+        body: "Converting unstructured business details into dense semantic schema that LLMs recognize, trust, and quote automatically in search summaries."
       },
       {
-        title: "Structured Data, Meta & Schema — All Perfect",
-        body: "We implement every technical signal search and AI engines use to evaluate your authority — from Open Graph tags to JSON-LD schema — so nothing is left on the table.",
+        title: "Conversational Search Dominance",
+        body: "Structuring content around long-tail user intent and natural Q&A formats to capture citation slots in ChatGPT Search & Perplexity."
       },
-    ],
+      {
+        title: "Authority Signal Amplification",
+        body: "Building off-page verification nodes and citations so search crawlers validate your business as the premium entity in your industry."
+      }
+    ]
   },
   {
     number: "02",
-    eyebrow: "Core Service",
-    title: "AI Website Transformation",
-    subtitle: "We don't redesign your site. We rebuild its entire engine.",
-    description: "Most agencies give you a new coat of paint. We go deeper. Our proprietary AI analyzes your existing website, preserves your exact brand identity, and completely rebuilds the technical infrastructure underneath — turning it into a fast, modern, AI-ready machine that performs at the highest level.",
+    tag: "Next-Gen Web Infrastructure",
+    title: "Website Rebuild",
+    subtitle: "We rebuild your technical engine from the inside out.",
+    description: "A gorgeous design is useless if the underlying code is slow or illegible to modern AI crawlers. Our proprietary framework preserves your brand visual guidelines while completely replacing your legacy code with a blazing fast, semantic, and completely optimized Next-js setup.",
     image: "/aivisifinal.png",
-    reverse: true,
+    accent: "from-[#3a7fc1] to-[#113256]",
     deepDives: [
       {
-        title: "Lighthouse 90+ Performance Scores",
-        body: "We target perfect scores across Performance, Accessibility, Best Practices, and SEO — not just improvements, but maxed-out results that put your site in the top tier of the internet.",
+        title: "Maximum Lighthouse Ratings",
+        body: "Targeting perfect scores across performance, SEO, accessibility, and architectural best practices to secure top organic listings."
       },
       {
-        title: "Future-Proofed Technical Foundation",
-        body: "Schema.org structured data, semantic HTML5, and full AI crawler access — your site is built for how search and AI discovery work today and for whatever comes next.",
+        title: "Global Edge CDN Architecture",
+        body: "Distributing lightweight cached static assets across 100+ global edge locations for near-instant load times from any device."
       },
       {
-        title: "Lightning-Fast Edge Hosting",
-        body: "Every second of load time costs you business. We deploy on modern, lightweight frameworks to the edge, ensuring near-instant load times for visitors anywhere in the world.",
-      },
-    ],
+        title: "Semantic AI-Crawler-Ready Schema",
+        body: "Implementing comprehensive Schema.org JSON-LD scripts so crawlers can easily digest your pricing, location, and services."
+      }
+    ]
   },
   {
     number: "03",
-    eyebrow: "Core Service",
+    tag: "Trust & Credibility Systems",
     title: "Reputation Management",
-    subtitle: "Your reputation is your revenue. We protect and grow it.",
-    description: "In any service business, what people say about you online determines whether a potential customer books or walks away. We deploy intelligent, automated systems to multiply your positive reviews, respond to feedback with care, and ensure your brand signal stays strong across every platform that matters.",
+    subtitle: "Automate and safeguard your brand authority.",
+    description: "Your digital reputation determines your ultimate sales conversions. We deploy completely automated systems that encourage satisfied customers to leave feedback on review hubs, automatically respond with HSL AI frameworks, and centralize everything into a clean corporate dashboard.",
     image: "/repu.png",
-    reverse: false,
+    accent: "from-[#113256] to-[#3a7fc1]",
     deepDives: [
       {
-        title: "Omnichannel Review Monitoring",
-        body: "We centralize your feedback from Google, TripAdvisor, Yelp, and OTA platforms into one dashboard — so you always know what's being said and can respond fast.",
+        title: "Automated Feedback Loops",
+        body: "Triggering smart, perfectly-timed review request cues immediately after successful customer interactions to boost trust signals."
       },
       {
-        title: "Automated Review Generation",
-        body: "After a great experience, your satisfied customers get a well-timed, friendly prompt to leave a review. More genuine reviews, more trust, more bookings — on autopilot.",
+        title: "Centralized Review Dashboard",
+        body: "Aggregating your ratings, reviews, and mentions from major platforms into a single stream to stay informed and react fast."
       },
       {
-        title: "Crisis Mitigation & Professional Response",
-        body: "Negative reviews happen. We provide de-escalating response frameworks that resolve the issue and demonstrate your exceptional care to every future reader who sees it.",
-      },
-    ],
+        title: "Brand Sentiment Guardrails",
+        body: "Using smart AI prompts to capture and address negative experiences privately before they hit public review platforms."
+      }
+    ]
   },
 ];
 
 export default function ServicesPage() {
+  const [activeTab, setActiveTab] = useState(0);
+
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
-        .noise::before {
-          content: '';
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+        
+        .services-light-canvas {
+          background-color: #f8fafc;
+          color: #374151;
+          font-family: 'DM_Sans', sans-serif;
+          overflow-x: hidden;
+        }
+        
+        /* Ambient Orbs */
+        .ambient-orb {
           position: absolute;
-          inset: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-          opacity: 0.035;
+          border-radius: 9999px;
+          filter: blur(120px);
           pointer-events: none;
           z-index: 1;
         }
-        .ai-badge {
-          background: linear-gradient(135deg, rgba(58,127,193,0.12) 0%, rgba(123,175,212,0.08) 100%);
-          border: 1px solid rgba(58,127,193,0.25);
+
+        /* Glassmorphism utility */
+        .glass-panel {
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(226, 232, 240, 0.8);
+          box-shadow: 0 10px 30px rgba(17, 50, 86, 0.04);
+        }
+
+        /* Tech Cyber Grid Overlay */
+        .cyber-grid {
+          background-image: linear-gradient(rgba(17, 50, 86, 0.02) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(17, 50, 86, 0.02) 1px, transparent 1px);
+          background-size: 50px 50px;
+        }
+
+        /* Custom Shimmer */
+        @keyframes cyber-shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        
+        .shimmer-text {
+          background: linear-gradient(90deg, #ffffff, #7bafd4, #e2e8f0, #ffffff);
+          background-size: 200% auto;
+          color: transparent;
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: cyber-shimmer 6s linear infinite;
         }
       `}</style>
 
-      <div className="min-h-screen bg-[#f8fafc] font-['DM_Sans',sans-serif]">
+      <div className="services-light-canvas min-h-screen relative pb-24">
+        {/* Cyber grid background */}
+        <div className="absolute inset-0 cyber-grid opacity-[0.75] pointer-events-none" />
 
-        {/* ══ HERO ══ */}
-        <section className="noise relative overflow-hidden bg-[linear-gradient(160deg,#07172a_0%,#0d2640_100%)] pt-[clamp(6rem,10vh,8rem)] pb-[clamp(4rem,8vh,6rem)]">
-          <div className="pointer-events-none absolute left-[10%] top-0 h-[600px] w-[800px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(58,127,193,0.2)_0%,transparent_70%)]" />
-          <div className="relative z-10 mx-auto max-w-[1200px] px-[clamp(1rem,4vw,2rem)] text-left pt-15">
-            <Eyebrow dark>What We Do</Eyebrow>
-            <Reveal y={20}>
-              <h1 className="mb-6 font-['DM_Sans',sans-serif] text-[clamp(2.5rem,5vw,4rem)] font-light leading-[1.05] tracking-[-0.03em] text-white">
-                <p className="font-['DM_Sans',sans-serif] font-normal">
-                  One Partner. <span className="text-[#7bafd4]">Every Digital Need.</span>
-                </p>
+        {/* Global Glowing Orbs */}
+        <div className="ambient-orb w-[600px] h-[600px] bg-[#113256]/4 -top-[200px] -left-[100px]" />
+        <div className="ambient-orb w-[500px] h-[500px] bg-[#3a7fc1]/5 top-[30%] -right-[100px]" />
+        <div className="ambient-orb w-[700px] h-[700px] bg-[#113256]/3 bottom-[10%] left-1/3" />
+
+        {/* ══════════════════════════════════════════════════════
+            1. HERO — Immersive Dark Blue Brand Header
+        ══════════════════════════════════════════════════════ */}
+        <section className="relative pt-36 pb-20 px-6 z-10 bg-[#113256] overflow-hidden">
+          {/* Subtle grid pattern overlay in Hero */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.15]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }}
+          />
+          <div className="pointer-events-none absolute left-[10%] top-0 h-[600px] w-[800px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(255,255,255,0.08)_0%,transparent_70%)]" />
+
+          <div className="max-w-[1200px] mx-auto text-center relative z-10">
+            
+            
+
+            {/* Main Premium Headline */}
+            <Reveal delay={0.1}>
+              <h1 className="font-['DM_Sans',sans-serif] text-[clamp(2.5rem,5vw,4rem)] leading-[1.05] tracking-[-0.04em] text-white mb-6 font-['Outfit',sans-serif]">
+                Engineering the <span className="shimmer-text font-normal">AI-First Ecosystem</span>
               </h1>
-              <p className="max-w-[600px] text-[clamp(1rem,1.5vw,1.15rem)] font-light leading-[1.75] text-white/60">
-                We don't just build websites — we engineer complete digital ecosystems powered by our proprietary AI. Every service we offer works together to make your business impossible to miss online.
+            </Reveal>
+
+            {/* Description */}
+            <Reveal delay={0.2}>
+              <p className="max-w-[700px] mx-auto text-[clamp(1rem,1.5vw,1.15rem)] font-light leading-relaxed text-white/60 mb-12">
+                We completely eliminate the borders between traditional web design, location marketing, search engines, and artificial intelligence models. Our proprietary infrastructure establishes your permanent competitive edge.
               </p>
             </Reveal>
-          </div>
-        </section>
 
-        {/* ══ DEEP DIVE SERVICES ══ */}
-        <section className="px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,10vw,9rem)]">
-          <div className="mx-auto max-w-[1200px] flex flex-col gap-[clamp(6rem,12vw,10rem)]">
-            {detailedServices.map((service, idx) => (
-              <div
-                key={idx}
-                className={`flex flex-col gap-[clamp(3rem,6vw,5rem)] items-start ${
-                  service.reverse ? "lg:flex-row-reverse" : "lg:flex-row"
-                }`}
-              >
-                {/* Sticky left/right side */}
-                <div className="w-full lg:w-[45%] lg:sticky lg:top-[120px]">
-                  <Reveal x={service.reverse ? 30 : -30}>
-                    <span className="mb-4 block font-['DM_Sans',sans-serif] text-[0.75rem] font-bold uppercase tracking-[0.2em] text-[#3a7fc1]/80">
-                      {service.eyebrow} · {service.number}
-                    </span>
-                    <h2 className="mb-4 font-['DM_Sans',sans-serif] text-[clamp(2rem,3vw,2.75rem)] font-light leading-[1.15] tracking-[-0.03em] text-[#0d2640]">
-                      {service.title}
-                    </h2>
-                    <p className="mb-6 text-[1.1rem] font-medium tracking-[0.01em] text-[#3a7fc1]">
-                      {service.subtitle}
-                    </p>
-                    <p className="mb-8 text-[0.95rem] font-light leading-[1.8] text-[#6b7280]">
-                      {service.description}
-                    </p>
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-[#e5e9ef] bg-white shadow-[0_8px_30px_rgba(7,23,42,0.04)]">
-                      <img
-                        src={service.image}
-                        alt={service.title}
-                        className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                      />
-                    </div>
-                  </Reveal>
-                </div>
-
-                {/* Feature cards */}
-                <div className="w-full lg:w-[55%] flex flex-col gap-6 lg:pt-[100px]">
-                  {service.deepDives.map((feature, fIdx) => (
-                    <Reveal key={fIdx} delay={fIdx * 0.1} y={30} x={service.reverse ? -20 : 20}>
-                      <div className="group rounded-[1.5rem] border border-[#e5e9ef] bg-white p-[clamp(2rem,4vw,3rem)] transition-all duration-300 hover:border-[#3a7fc1]/30 hover:shadow-[0_12px_40px_rgba(58,127,193,0.08)]">
-                        <div className="mb-5 flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#f1f5f9] text-[#3a7fc1] transition-colors group-hover:bg-[#3a7fc1] group-hover:text-white">
-                          <Check />
-                        </div>
-                        <h3 className="mb-4 text-[1.35rem] font-normal leading-[1.3] text-[#0d2640]">
-                          {feature.title}
-                        </h3>
-                        <p className="text-[0.95rem] font-light leading-[1.75] text-[#6b7280]">
-                          {feature.body}
-                        </p>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
+            {/* Interactive Section Switcher Menu */}
+            <Reveal delay={0.3}>
+              <div className="inline-flex flex-wrap justify-center gap-2 p-1.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-lg max-w-full">
+                {detailedServices.map((service, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveTab(idx)}
+                    className={`px-5 py-2.5 rounded-xl text-[0.8rem] font-medium tracking-wide transition-all duration-300 flex items-center gap-2 ${
+                      activeTab === idx
+                        ? "bg-white text-[#113256] shadow-[0_4px_20px_rgba(255,255,255,0.15)]"
+                        : "text-white/70 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <span className="text-[9px] font-bold opacity-55">{service.number}</span>
+                    {service.title}
+                  </button>
+                ))}
               </div>
-            ))}
+            </Reveal>
+
           </div>
         </section>
 
-        {/* ══ ALSO AVAILABLE ══ */}
-        <section className="px-[clamp(1.25rem,4vw,2rem)] pb-[clamp(5rem,10vw,9rem)]">
-          <div className="mx-auto max-w-[1200px]">
-            <Reveal>
-              <div className="rounded-[1.5rem] border border-[#e5e9ef] bg-white p-[clamp(2rem,4vw,3.5rem)]">
-                <Eyebrow>Also Available</Eyebrow>
-                <h3 className="mb-8 text-[1.5rem] font-light tracking-[-0.02em] text-[#0d2640]">
-                  Everything else your digital presence needs — under one roof.
-                </h3>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                  {["Premium Hosting", "Custom Web Development", "Digital Marketing Tools"].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl border border-[#e5e9ef] p-4">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#e8f0f8] text-[#3a7fc1]">
-                        <Check />
+        {/* ══════════════════════════════════════════════════════
+            2. CORE PRESENTATION — Tab-Responsive White Glass Panel
+        ══════════════════════════════════════════════════════ */}
+        <section className="relative px-6 z-10 mb-28 -mt-8">
+          <div className="max-w-[1200px] mx-auto">
+            {detailedServices.map((service, idx) => {
+              if (idx !== activeTab) return null;
+              return (
+                <div key={idx} className="glass-panel rounded-[32px] p-8 md:p-12 overflow-hidden relative border border-[#e2e8f0]">
+                  {/* Glowing aura inside card */}
+                  <div className={`pointer-events-none absolute -top-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-br ${service.accent} opacity-[0.05] filter blur-[80px]`} />
+
+                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center relative z-10">
+                    
+                    {/* Left Details */}
+                    <div>
+                      {/* Eyebrow tag */}
+                      <span className="text-[10px] font-bold tracking-[0.25em] text-[#3a7fc1] uppercase mb-4 block">
+                        {service.tag} · 
+                      </span>
+                      
+                      {/* Big Heading */}
+                      <h2 className="text-[2.6rem] md:text-[3.2rem] font-light leading-none tracking-[-0.03em] text-[#113256] mb-4 font-['Outfit',sans-serif]">
+                        {service.title}
+                      </h2>
+                      
+                      {/* Subtitle */}
+                      <p className={`text-[1.1rem] font-semibold mb-6 bg-gradient-to-r ${service.accent} bg-clip-text text-transparent`}>
+                        {service.subtitle}
+                      </p>
+                      
+                      {/* Main Paragraph */}
+                      <p className="text-[0.98rem] font-light leading-relaxed text-gray-600 mb-8 max-w-[580px]">
+                        {service.description}
+                      </p>
+
+                      {/* Technical features nodes list */}
+                      <div className="space-y-4">
+                        {service.deepDives.map((item, fIdx) => (
+                          <div key={fIdx} className="flex gap-4 p-4 rounded-2xl bg-white border border-[#e2e8f0] hover:border-[#113256]/30 hover:shadow-sm transition-all duration-200">
+                            <div className="w-8 h-8 rounded-lg bg-[#113256]/8 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#113256]">
+                              <CheckCircle2 className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <h4 className="text-[0.92rem] font-bold text-[#113256] mb-1">{item.title}</h4>
+                              <p className="text-[0.82rem] font-light text-gray-500 leading-relaxed">{item.body}</p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <span className="text-[0.95rem] font-medium text-[#0d2640]">{item}</span>
                     </div>
-                  ))}
+
+                    {/* Right Column Stack */}
+                    <div className="space-y-6">
+                      {/* Right Interactive Image Deck */}
+                      <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden border border-[#e2e8f0] bg-black/5 group">
+                        {/* Glow frame */}
+                        <div className={`absolute inset-0 bg-gradient-to-tr ${service.accent} opacity-0 group-hover:opacity-[0.05] transition-opacity duration-500`} />
+                        
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                        />
+
+                        {/* Hover stats overlays overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#113256]/85 via-[#113256]/0 to-[#113256]/30 p-6 flex flex-col justify-between pointer-events-none">
+                          
+                          
+                        </div>
+                      </div>
+
+                      {/* 9 Core Visibility Signals section (Under Image) */}
+                      {service.visibilitySignals && (
+                        <div className="p-6 rounded-2xl bg-[#113256]/5 border border-[#113256]/10 relative overflow-hidden group">
+                          {/* Decorative blur element */}
+                          <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-[#3a7fc1]/5 rounded-full filter blur-xl pointer-events-none group-hover:bg-[#3a7fc1]/10 transition-colors duration-300" />
+                          
+                          <h4 className="text-[0.82rem] font-bold text-[#113256] uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <Cpu className="w-[18px] h-[18px] text-[#3a7fc1] animate-pulse" />
+                            We Optimize All 9 Core Visibility Signals
+                          </h4>
+                          
+                          <div className="grid grid-cols-3 gap-2.5">
+                            {service.visibilitySignals.map((signal, sIdx) => (
+                              <div
+                                key={sIdx}
+                                className="flex flex-col items-center justify-center text-center p-2.5 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] hover:border-[#3a7fc1]/30 hover:bg-white hover:shadow-[0_10px_30px_rgba(17,50,86,0.06)] hover:-translate-y-[2px] transition-all duration-300 min-h-[58px]"
+                              >
+                                
+                                <span className="text-[0.7rem] font-bold text-[#113256] leading-tight">{signal}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════
+            3. INCLUDED SERVICES — Dynamic White Grid
+        ══════════════════════════════════════════════════════ */}
+        <section className="relative px-6 z-10">
+          <div className="max-w-[1200px] mx-auto">
+            <Reveal>
+              <div className="glass-panel rounded-[32px] p-8 md:p-12 overflow-hidden relative border border-[#e2e8f0]">
+                {/* Decorative glowing lines */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#113256]/20 to-transparent" />
+                
+                <div className="text-center mb-12">
+                  <Eyebrow>All Services</Eyebrow>
+                  <h3 className="text-[2.2rem] font-light tracking-[-0.03em] text-[#113256] font-['Outfit',sans-serif]">
+                    Everything in One Subscription
+                  </h3>
+                  <p className="max-w-[480px] mx-auto text-[0.88rem] font-light text-gray-500 mt-2">
+                    No third-party wrappers. No rented licenses. Only premium, purpose-built digital assets engineered specifically for your brand.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[
+                    { icon: Bot, label: "GEO · AI Visibility", desc: "Proprietary AI index submissions" },
+                    { icon: Search, label: "SEO Optimization", desc: "Traditional Google query ranks" },
+                    { icon: Globe, label: "Website Rebuild", desc: "Modern Website structures" },
+                    { icon: Server, label: "Premium Hosting", desc: "Distribute globally with 99.9% uptime" },
+                    { icon: Vote, label: "Social Media Management", desc: "Cohesive content distribution" },
+                    { icon: Star, label: "Reputation Manager", desc: "Handles all review platforms", tag: "Exclusive" },
+                  ].map((item, i) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <div
+                        key={i}
+                        className="group relative flex gap-4 p-5 rounded-2xl bg-[#f8fafc] border border-[#e5e9ef] hover:border-[#113256]/30 hover:bg-white hover:shadow-[0_10px_30px_rgba(17,50,86,0.06)] transition-all duration-300 overflow-hidden"
+                      >
+                        {item.tag && (
+                          <span className="absolute top-1.5 right-1.5 text-[0.55rem] font-bold uppercase tracking-wider bg-[#3a7fc1]/10 text-[#3a7fc1] border border-[#3a7fc1]/20 px-2 py-0.5 rounded-full scale-90">
+                            {item.tag}
+                          </span>
+                        )}
+                        <div className="w-10 h-10 rounded-xl bg-[#113256]/8 group-hover:bg-[#113256] text-[#113256] group-hover:text-white transition-colors duration-300 flex items-center justify-center flex-shrink-0">
+                          <IconComponent className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="text-[0.88rem] font-bold text-[#113256] mb-0.5 group-hover:text-[#3a7fc1] transition-colors duration-200">
+                            {item.label}
+                          </p>
+                          <p className="text-[0.75rem] font-light text-gray-500 leading-relaxed">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Final Call to Action inside grid block */}
+                <div className="mt-12 pt-8 border-t border-[#e2e8f0] flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="text-center md:text-left">
+                    <p className="text-[1.1rem] font-bold text-[#113256]">Ready to deploy your ecosystem?</p>
+                    <p className="text-[0.82rem] font-light text-gray-500">Schedule a 15-minute diagnostic session with our engineers.</p>
+                  </div>
+                  <a
+                    href="/contact"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#113256] hover:bg-[#1c4978] text-white font-medium text-[0.88rem] shadow-[0_4px_25px_rgba(17,50,86,0.15)] hover:translate-y-[-2px] transition-all duration-300"
+                  >
+                    Join Us <ArrowRight />
+                  </a>
+                </div>
+
               </div>
             </Reveal>
           </div>
