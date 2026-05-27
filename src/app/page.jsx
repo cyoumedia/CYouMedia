@@ -17,8 +17,8 @@ import {
   Handshake,
   Hotel,
   Factory,
-Server,
-Vote,
+  Server,
+  Vote,
 } from "lucide-react";
 
 /* ─── ICONS ─── */
@@ -434,7 +434,7 @@ export default function HomePage() {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          background: #3a7fc1;
+          background: #123356;
           color: white;
           font-weight: 600;
           font-size: 0.9rem;
@@ -845,13 +845,13 @@ export default function HomePage() {
                   desc: "AI engines answer with location context. We make sure your business is the trusted, verified answer in your city, region, and niche  wherever your customers are asking.",
                   accent: "#6b7280",
                 },
-               {
-  icon: Zap,
-  label: "Speed · Rapid Launch",
-  title: "Go Live in Days",
-  desc: "Most agencies take months to launch. With our proprietary AI-powered workflow, we design, build, and launch high-performing websites in just days without compromising quality.",
-  accent: "#6b7280",
-},
+                {
+                  icon: Zap,
+                  label: "Speed · Rapid Launch",
+                  title: "Go Live in Days",
+                  desc: "Most agencies take months to launch. With our proprietary AI-powered workflow, we design, build, and launch high-performing websites in just days without compromising quality.",
+                  accent: "#6b7280",
+                },
               ].map((card, i) => {
                 const IconComponent = card.icon;
                 return (
@@ -908,7 +908,11 @@ export default function HomePage() {
                     { icon: Globe, label: "Website Rebuild" },
                     { icon: Server, label: "Premium Hosting" },
                     { icon: Vote, label: "Social Media Management" },
-                    { icon: Star, label: "Reputation Manager", tag: "Exclusive" },
+                    {
+                      icon: Star,
+                      label: "Reputation Manager",
+                      tag: "Exclusive",
+                    },
                   ].map((item, i) => {
                     const IconComponent = item.icon;
                     return (
@@ -1000,7 +1004,7 @@ export default function HomePage() {
                   desc: "We reconstruct your website with our proprietary AI framework — structured data, semantic architecture, GEO-optimised content, and technical signals that AI models are trained to trust. This is the engine. This is what makes the difference.",
                   points: [
                     "Proprietary schema & structured data",
-                    "AI-crawler-ready architecture",
+                    "AI-visibility-ready architecture",
                     "GEO content framework",
                   ],
                 },
@@ -1097,7 +1101,8 @@ export default function HomePage() {
                     Why CYouMedia
                   </div>
                   <h2 className="text-[clamp(2.2rem,4vw,3.2rem)] font-light leading-[1.1] tracking-[-0.03em] text-[#0d2640] max-w-[580px]">
-                    We don't use other people's AI, <span className=" text-[#3a7fc1]">We built our own.</span>
+                    We don't use other people's AI,{" "}
+                    <span className=" text-[#3a7fc1]">We built our own.</span>
                   </h2>
                 </div>
                 <div className="lg:max-w-[340px]">
@@ -1403,12 +1408,6 @@ export default function HomePage() {
                 the technology, the infrastructure, and the ongoing intelligence
                 to own that recommendation — starting this week.
               </p>
-
-              <div className="mt-8 flex justify-center">
-                <a href="/contact" className="cta-btn">
-                  Get Started <ArrowRight />
-                </a>
-              </div>
             </Reveal>
           </div>
         </section>

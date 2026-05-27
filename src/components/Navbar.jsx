@@ -106,30 +106,30 @@ export default function Navbar() {
                     boxShadow: "none",
                   }
               : scrolled
-              ? {
-                  maxWidth: 1120,
-                  marginTop: 16,
-                  borderRadius: 9999,
-                  paddingLeft: 32,
-                  paddingRight: 32,
-                  height: 64,
-                  backgroundColor: "rgba(255,255,255,0.95)",
-                  borderColor: "rgba(0,0,0,0.08)",
-                  boxShadow:
-                    "0 4px 28px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.8) inset",
-                }
-              : {
-                  maxWidth: 1120,
-                  marginTop: 24,
-                  borderRadius: 24,
-                  paddingLeft: 32,
-                  paddingRight: 32,
-                  height: 64,
-                  backgroundColor: "rgba(255,255,255,0.03)",
-                  borderColor: "rgba(255,255,255,0.08)",
-                  boxShadow:
-                    "0 4px 28px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.05) inset",
-                }
+                ? {
+                    maxWidth: 1120,
+                    marginTop: 16,
+                    borderRadius: 9999,
+                    paddingLeft: 32,
+                    paddingRight: 32,
+                    height: 64,
+                    backgroundColor: "rgba(255,255,255,0.95)",
+                    borderColor: "rgba(0,0,0,0.08)",
+                    boxShadow:
+                      "0 4px 28px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.8) inset",
+                  }
+                : {
+                    maxWidth: 1120,
+                    marginTop: 24,
+                    borderRadius: 24,
+                    paddingLeft: 32,
+                    paddingRight: 32,
+                    height: 64,
+                    backgroundColor: "rgba(255,255,255,0.03)",
+                    borderColor: "rgba(255,255,255,0.08)",
+                    boxShadow:
+                      "0 4px 28px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.05) inset",
+                  }
           }
           transition={{ duration: 0.5, ease: EASE_EXPO }}
           style={{
@@ -164,9 +164,7 @@ export default function Navbar() {
                     : "rgba(10,10,10,0.55)",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = isHero
-                    ? "#ffffff"
-                    : "#0a0a0a")
+                  (e.currentTarget.style.color = isHero ? "#ffffff" : "#0a0a0a")
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.color = isHero
@@ -175,7 +173,6 @@ export default function Navbar() {
                 }
               >
                 {link.label}
-                
               </Link>
             ))}
           </nav>

@@ -93,7 +93,7 @@ export default function AboutPage() {
       {/* ══════════════════════════════════
           HERO — original design preserved
       ══════════════════════════════════ */}
-      <section className="noise relative overflow-hidden bg-[linear-gradient(160deg,#07172a_0%,#0d2640_100%)] pt-[clamp(6rem,10vh,8rem)] pb-[clamp(4rem,8vh,6rem)]">
+      <section className="noise relative overflow-hidden bg-[#123356] pt-[clamp(6rem,10vh,8rem)] pb-[clamp(4rem,8vh,6rem)]">
         <div className="pointer-events-none absolute left-[10%] top-0 h-[600px] w-[800px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(58,127,193,0.2)_0%,transparent_70%)]" />
 
         <div className="relative z-10 mx-auto max-w-[1200px] px-[clamp(1rem,4vw,2rem)] pt-15">
