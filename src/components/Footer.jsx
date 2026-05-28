@@ -13,11 +13,13 @@ const Footer = () => {
           <div className="max-w-[340px]">
             
             {/* Logo */}
-            <img
-              src="/logocym.jpg"
-              alt="Cyoumedia Logo"
-              className="mb-6 h-6 w-auto object-contain"
-            />
+            <a href="/">
+              <img
+                src="/logocym.jpg"
+                alt="Cyoumedia Logo"
+                className="mb-6 h-6 w-auto object-contain cursor-pointer"
+              />
+            </a>
 
             {/* Description */}
             <p className="text-[0.92rem] leading-[1.9] text-[#6b7280]">
@@ -29,7 +31,7 @@ const Footer = () => {
           </div>
 
           {/* Right Side */}
-          <div className="grid grid-cols-2 gap-14 sm:gap-20">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 sm:gap-14">
             
             {/* Services */}
             <div>
@@ -39,15 +41,17 @@ const Footer = () => {
 
               <div className="flex flex-col gap-3">
                 {[
-                  "AI Powered Visibility",
-                  "Reputation Management",
-                ].map((item) => (
-                  <span
-                    key={item}
-                    className="text-[0.9rem] text-[#6b7280]"
+                  ["AI Powered Visibility", "/services"],
+                  ["Reputation Management", "/services"],
+                  ["SEO Optimization", "/services"],
+                ].map(([label, href]) => (
+                  <a
+                    key={label}
+                    href={href}
+                    className="text-[0.9rem] text-[#6b7280] transition-colors duration-300 hover:text-black"
                   >
-                    {item}
-                  </span>
+                    {label}
+                  </a>
                 ))}
               </div>
             </div>
@@ -60,8 +64,32 @@ const Footer = () => {
 
               <div className="flex flex-col gap-3">
                 {[
-                  ["Services", "/services"],
-                  ["About", "/about"],
+                  ["About Us", "/about"],
+                  ["Careers", "/careers"],
+                  ["Contact", "/contact"],
+                ].map(([label, href]) => (
+                  <a
+                    key={label}
+                    href={href}
+                    className="text-[0.9rem] text-[#6b7280] transition-colors duration-300 hover:text-black"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Resources */}
+            <div className="col-span-2 sm:col-span-1">
+              <h3 className="mb-5 text-[0.9rem] font-medium text-black">
+                Resources
+              </h3>
+
+              <div className="flex flex-col gap-3">
+                {[
+                  ["AI Audit", "/audit"],
+                  ["FAQ", "/faq"],
+                  ["Blog Insights", "/blog"],
                 ].map(([label, href]) => (
                   <a
                     key={label}
@@ -85,17 +113,17 @@ const Footer = () => {
 
           <div className="flex items-center justify-center gap-5 sm:justify-end">
             <a
-              href="#"
+              href="/privacy"
               className="text-[0.8rem] text-[#9ca3af] transition-colors duration-300 hover:text-black"
             >
               Privacy Policy
             </a>
 
             <a
-              href="#"
+              href="/terms"
               className="text-[0.8rem] text-[#9ca3af] transition-colors duration-300 hover:text-black"
             >
-              Terms
+              Terms & Conditions
             </a>
           </div>
         </div>

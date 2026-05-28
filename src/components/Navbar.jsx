@@ -15,6 +15,7 @@ const EASE_EXPO = [0.87, 0, 0.13, 1];
 const NAV_LINKS = [
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
+  { label: "Audit", href: "/audit" },
 ];
 
 /* Magnetic wrapper */

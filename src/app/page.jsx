@@ -114,27 +114,27 @@ const AIDemo = () => {
     if (typed.length < query.length) {
       timeout = setTimeout(
         () => setTyped(query.slice(0, typed.length + 1)),
-        45,
+        80, // Slower character typing pace (from 45ms)
       );
     } else if (!showOld && !thinking && !showNew) {
-      timeout = setTimeout(() => setShowOld(true), 400);
+      timeout = setTimeout(() => setShowOld(true), 800); // Standard read pause
     } else if (showOld && !thinking && !showNew) {
       timeout = setTimeout(() => {
         setShowOld(false);
         setThinking(true);
-      }, 2000);
+      }, 3500); // Slower to let the user read the list (from 2000ms)
     } else if (thinking && !showNew) {
       timeout = setTimeout(() => {
         setThinking(false);
         setShowNew(true);
-      }, 1800);
+      }, 2500); // Slower to show evaluation state (from 1800ms)
     } else if (showNew) {
       timeout = setTimeout(() => {
         setTyped("");
         setShowOld(false);
         setShowNew(false);
         setThinking(false);
-      }, 4000);
+      }, 6000); // Slower to let the user read the recommended result (from 4000ms)
     }
     return () => clearTimeout(timeout);
   }, [typed, showOld, thinking, showNew]);
@@ -153,7 +153,7 @@ const AIDemo = () => {
           </span>
         </div>
 
-        <div className="p-5 min-h-[260px]">
+        <div className="p-5 min-h-[390px] sm:min-h-[320px] md:min-h-[280px]">
           {/* User query */}
           <div className="flex justify-end mb-4">
             <div className="bg-[#3a7fc1]/20 border border-[#3a7fc1]/20 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%]">
@@ -193,8 +193,6 @@ const AIDemo = () => {
                       "2. Best Boutique Hotels in Stockholm | Booking.com",
                       "3. Stockholm Hotels Guide 2026",
                       "4. Reddit — Best luxury hotel in Stockholm?",
-                      "5. Expedia — Compare 120+ hotels",
-                      "6. Hotels.com — Luxury stays near city center",
                     ].map((r, i) => (
                       <div
                         key={i}
@@ -503,8 +501,8 @@ export default function HomePage() {
 
                 <Reveal y={16} delay={0.22}>
                   <div className="flex flex-wrap gap-4 mb-10">
-                    <a href="#how-it-works" className="cta-btn">
-                      See How It Works <ArrowRight />
+                    <a href="/audit" className="cta-btn">
+                      Get Your Audit Report <ArrowRight />
                     </a>
                   </div>
                 </Reveal>
@@ -541,7 +539,7 @@ export default function HomePage() {
             THE PROBLEM — Visceral, immediate, impossible to skip
         ══════════════════════════════════════════════════════ */}
         <section className="px-[clamp(1.25rem,4vw,2rem)] py-[clamp(5rem,10vw,8rem)] bg-white">
-          <div className="mx-auto max-w-[1200px]">
+          <article className="mx-auto max-w-[1200px]">
             {/* ── TOP: THE HEADLINE PROBLEM ── */}
             <div className="px-[clamp(1.25rem,4vw,2rem)] pt-[] pb-0">
               <div className="mx-auto max-w-[1200px]">
@@ -781,7 +779,7 @@ export default function HomePage() {
                 </div>
               </div>
             </Reveal>
-          </div>
+          </article>
         </section>
 
         {/* ══════════════════════════════════════════════════════

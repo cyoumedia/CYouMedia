@@ -1318,9 +1318,9 @@ export default function ServicesPage() {
                       {service.visibilitySignals.map((sig, i) => (
                         <div
                           key={i}
-                          className="feature-card text-center p-2.5 rounded-xl bg-white border border-[#e5e9ef] min-h-[52px] flex items-center justify-center"
+                          className="feature-card text-center p-2.5 rounded-xl bg-[#163658] border border-white/10 min-h-[52px] flex items-center justify-center"
                         >
-                          <span className="text-[0.7rem] font-bold text-[#113256] leading-tight">
+                          <span className="text-[0.7rem] font-bold text-white leading-tight">
                             {sig}
                           </span>
                         </div>
