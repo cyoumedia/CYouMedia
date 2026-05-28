@@ -89,7 +89,6 @@ const Footer = () => {
                 {[
                   ["AI Audit", "/audit"],
                   ["FAQ", "/faq"],
-                  ["Blog Insights", "/blog"],
                 ].map(([label, href]) => (
                   <a
                     key={label}
@@ -105,27 +104,13 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 flex flex-col gap-4 border-t border-[#ececec] pt-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+        <div className="mt-12 flex flex-col gap-4 border-t border-[#ececec] pt-6 text-center sm:flex-row sm:items-center sm:justify-center sm:text-left">
           
           <p className="text-[0.8rem] text-[#9ca3af]">
             © {new Date().getFullYear()} CYOUMEDIA. All rights reserved.
           </p>
 
-          <div className="flex items-center justify-center gap-5 sm:justify-end">
-            <a
-              href="/privacy"
-              className="text-[0.8rem] text-[#9ca3af] transition-colors duration-300 hover:text-black"
-            >
-              Privacy Policy
-            </a>
-
-            <a
-              href="/terms"
-              className="text-[0.8rem] text-[#9ca3af] transition-colors duration-300 hover:text-black"
-            >
-              Terms & Conditions
-            </a>
-          </div>
+          
         </div>
       </div>
     </footer>
